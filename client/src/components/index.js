@@ -1,7 +1,8 @@
 import App from './App';
 import EntryForm from './EntryForm';
 import Footer from './Footer';
-import Log from './Log';
+import LogBar from './LogBar';
 import PreviewCard from './PreviewCard';
+import Map from './Map';
 
-export { App, EntryForm, Footer, Log, PreviewCard };
+export { App, EntryForm, Footer, LogBar, PreviewCard, Map };

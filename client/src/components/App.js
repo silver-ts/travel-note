@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-import Log from './Log';
+import LogBar from './LogBar';
 import Footer from './Footer';
 import EntryForm from './EntryForm';
+import Map from './Map';
 
 const App = () => {
   const [showModal, setShowModal] = useState(false);
@@ -34,10 +35,11 @@ const App = () => {
         <EntryForm onClose={closeModalHandler} isOpen={showModal} />
       )}
       <main id="content">
-        <button className="flex-1 bg-purple-500" onClick={openModalHandler}>
+        {/* <button className="flex-1 bg-purple-500" onClick={openModalHandler}>
           Map
-        </button>
-        <Log />
+        </button> */}
+        <Map clicked={openModalHandler} />
+        <LogBar />
       </main>
       {/* <Footer /> */}
     </>
