@@ -15,12 +15,12 @@ const LogBar = () => {
     <>
       <aside
         className={`fixed top-0 right-0 transform transition-transform ${
-          showBar ? 'translate-x-96' : 'translate-x-0'
+          showBar ? 'translate-x-0' : 'translate-x-96'
         }`}>
         <button
           onClick={toggleLogBar}
-          className="fixed bg-gray-100 rounded-full top-10 left-0 transform -translate-x-2/4 z-40">
-          <MenuIcon className="fill-current text-gray-800" />
+          className="fixed bg-gray-100 rounded-full bg-gray-300 p-2 top-10 left-0 transform -translate-x-2/4 z-40">
+          <MenuIcon className="fill-current text-gray-800 w-10 h-10" />
         </button>
         <div
           className={`custom-scroll h-screen overflow-y-scroll xl:max-w-screen-sm pl-5 bg-gray-300`}>

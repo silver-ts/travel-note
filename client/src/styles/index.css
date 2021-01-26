@@ -7,6 +7,10 @@
     @apply min-h-screen flex flex-col sm:flex-row bg-gray-800 text-gray-50;
   }
 
+  button {
+    @apply outline-none focus:outline-none;
+  }
+
   /* When modal is open, blur content and prevent scrolling */
   .is-blurred {
     @apply pointer-events-none overflow-hidden;
@@ -78,5 +82,10 @@
 
   .input-field::-webkit-file-upload-button {
     @apply hidden;
+  }
+
+  /* Map marker */
+  .marker {
+    @apply block rounded-full border-2 border-red-400 cursor-pointer p-0;
   }
 }
