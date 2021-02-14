@@ -2,6 +2,7 @@
   "extends": ["@ryuuto829/eslint-config-with-prettier"],
   "env": {
     "browser": true,
-    "node": true
+    "node": true,
+    "commonjs": true
   }
 }
