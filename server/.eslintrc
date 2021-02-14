@@ -3,6 +3,7 @@
   "env": {
     "browser": true,
     "node": true,
-    "commonjs": true
+    "commonjs": true,
+    "jest": true
   }
 }
