@@ -9,10 +9,12 @@ const { MONGO_DB_CONNECT } = process.env;
 const app = express();
 
 // Set up mongoose connection
-mongoose.connect(MONGO_DB_CONNECT, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+if (process.env.NODE_ENV !== 'test') {
+  mongoose.connect(MONGO_DB_CONNECT, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+}
 
 // Middleware for parsing JSON requests
 app.use(express.json());
