@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 const authRouter = require('./routes/auth');
+const { verifyUserAuth } = require('./middleware/auth');
 
 // Require variables from .env file
 require('dotenv').config();
@@ -16,10 +18,12 @@ if (process.env.NODE_ENV !== 'test') {
   });
 }
 
-// Middleware for parsing JSON requests
+// Middlewares
 app.use(express.json());
+app.use(cookieParser());
 
 // Route middlewares
-app.use('/api/user', authRouter);
+app.use('/user', authRouter);
+app.use('/', verifyUserAuth, (req, res) => res.send('main page'));
 
 module.exports = app;

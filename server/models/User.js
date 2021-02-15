@@ -32,6 +32,22 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
+// Add static method for login
+// eslint-disable-next-line prettier/prettier
+userSchema.static('login', async function(email, password) {
+  const user = await this.findOne({ email });
+
+  if (user) {
+    const auth = await bcrypt.compare(password, user.password);
+
+    if (auth) {
+      return user;
+    }
+    throw new Error('incorrect password');
+  }
+  throw new Error('no email found');
+});
+
 const User = model('user', userSchema);
 
 module.exports = User;
