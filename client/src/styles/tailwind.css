@@ -30,4 +30,8 @@
   .input {
     @apply w-full rounded-lg h-11 bg-slate-300 px-3;
   }
+
+  .btn {
+    @apply bg-salmon w-max py-1 px-6 rounded-full text-slate-400 text-xl font-medium uppercase;
+  }
 }
