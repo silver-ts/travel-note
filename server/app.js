@@ -29,7 +29,7 @@ app.use(cors({ origin: CORS_ORIGIN }));
 
 // Route middlewares
 app.get('/api/test', (req, res) => res.status(200).send({ username: 'Flavio' }));
-app.use('/user', authRouter);
-app.use('/', verifyUserAuth, (req, res) => res.send('main page'));
+app.use('/api/auth', authRouter);
+app.get('/', verifyUserAuth, (req, res) => res.send('main page'));
 
 module.exports = app;

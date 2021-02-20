@@ -2,14 +2,28 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 require('dotenv').config();
-const { JWT_TOKEN_SECRET, JWT_TOKEN_EXPIRES_IN } = process.env;
-// For cookies convert minutes to milliseconds
-const JWT_TOKEN_EXPIRES_IN_MS = JWT_TOKEN_EXPIRES_IN * 60 * 1000;
+const {
+  JWT_ACCESS_TOKEN_SECRET,
+  JWT_ACCESS_TOKEN_EXPIRES_IN,
+  JWT_REFRESH_TOKEN_SECRET,
+  JWT_REFRESH_TOKEN_EXPIRES_IN,
+} = process.env;
+// For cookies convert minutes to milliseconds = m * s * ms
+const JWT_ACCESS_TOKEN_EXPIRES_IN_MS = JWT_ACCESS_TOKEN_EXPIRES_IN * 60 * 1000;
 
-// Create auth token using JWT
-const generateAccessToken = id =>
-  jwt.sign({ id }, JWT_TOKEN_SECRET, {
-    expiresIn: `${JWT_TOKEN_EXPIRES_IN}m`,
+// DELETE LATER
+let refreshTokens = [];
+
+// Create access token using JWT
+const generateAccessToken = user =>
+  jwt.sign({ user }, JWT_ACCESS_TOKEN_SECRET, {
+    expiresIn: `${JWT_ACCESS_TOKEN_EXPIRES_IN}m`,
+  });
+
+// Create refresh token using JWT
+const generateRefreshToken = user =>
+  jwt.sign({ user }, JWT_REFRESH_TOKEN_SECRET, {
+    expiresIn: `${JWT_REFRESH_TOKEN_EXPIRES_IN}m`,
   });
 
 // Format error messages for sending to client UI
@@ -51,23 +65,23 @@ const signup_post = async (req, res) => {
     // Create a new user in database
     const user = await User.create({ email, password });
 
-    // Generate a token
-    const token = generateAccessToken(user._id);
+    // Generate tokens
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
 
-    // Store jwt token in cookie
-    res.cookie('jwt', token, {
+    // Store jwt access token in cookie
+    res.cookie('jwt', accessToken, {
       httpOnly: true,
-      maxAge: JWT_TOKEN_EXPIRES_IN_MS,
+      maxAge: JWT_ACCESS_TOKEN_EXPIRES_IN_MS,
     });
 
-    res.status(201).send({ user: user._id });
+    // Store jwt refresh token in db
+    refreshTokens.push(refreshToken);
+
+    res.status(201).send({ user: user._id, refreshToken });
   } catch (err) {
     res.status(400).send(formatErrors(err));
   }
-};
-
-const signup_get = (req, res) => {
-  res.send('sign up get');
 };
 
 // Login controllers
@@ -77,36 +91,70 @@ const login_post = async (req, res) => {
   try {
     const user = await User.login(email, password);
 
-    // Generate a token
-    const token = generateAccessToken(user._id);
+    // Generate tokens
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
 
-    // Store jwt token in cookie
-    res.cookie('jwt', token, {
+    // Store jwt access token in cookie
+    res.cookie('jwt', accessToken, {
       httpOnly: true,
-      maxAge: JWT_TOKEN_EXPIRES_IN_MS,
+      maxAge: JWT_ACCESS_TOKEN_EXPIRES_IN_MS,
     });
 
-    res.status(200).send({ user: user._id });
+    // Store jwt refresh token in db
+    refreshTokens.push(refreshToken);
+
+    res.status(200).send({ user: user._id, refreshToken });
   } catch (err) {
-    res.status(400).send(formatErrors(err));
+    res.status(401).send(formatErrors(err));
   }
 };
 
-const login_get = (req, res) => {
-  res.send('login get');
-};
+const logout_delete = (req, res) => {
+  const { refreshToken } = req.body;
 
-const logout_get = (req, res) => {
   // Delete current cookie
   res.cookie('jwt', '', { maxAge: 1 });
 
-  res.redirect('/user/login');
+  // Remove refresh token from db
+  refreshTokens = refreshTokens.filter(token => token !== refreshToken);
+
+  res.status(204).send('logout success');
+};
+
+const refresh_post = async (req, res) => {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken) {
+    res.status(403).send('no access');
+  }
+
+  if (!refreshTokens.includes(refreshToken)) {
+    res.status(403).send('no access');
+  }
+
+  try {
+    // Verify jwt token
+    const decoded = await jwt.verify(refreshToken, JWT_REFRESH_TOKEN_SECRET);
+
+    // Generate tokens
+    const newAccessToken = generateAccessToken(decoded.user);
+
+    // Store jwt access token in cookie
+    res.cookie('jwt', newAccessToken, {
+      httpOnly: true,
+      maxAge: JWT_ACCESS_TOKEN_EXPIRES_IN_MS,
+    });
+
+    res.status(200).send({ user: decoded.user });
+  } catch (err) {
+    res.status(403).send('no access');
+  }
 };
 
 module.exports = {
   signup_post,
   login_post,
-  signup_get,
-  login_get,
-  logout_get,
+  logout_delete,
+  refresh_post,
 };

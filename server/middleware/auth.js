@@ -2,22 +2,22 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 require('dotenv').config();
-const { JWT_TOKEN_SECRET } = process.env;
+const { JWT_ACCESS_TOKEN_SECRET } = process.env;
 
 // Protect routes by verifying user token and checking db
 const verifyUserAuth = async (req, res, next) => {
-  const token = req.cookies.jwt;
+  const accessToken = req.cookies.jwt;
 
-  if (!token) {
+  if (!accessToken) {
     // To be in sync with db we should receive user data from db
     // each time we accessing routes with authentication
     res.locals.user = null;
-    return res.status(401).redirect('/user/login');
+    return res.status(401).send('no access');
   }
 
   try {
     // Verify jwt token
-    const decoded = await jwt.verify(token, JWT_TOKEN_SECRET);
+    const decoded = await jwt.verify(accessToken, JWT_ACCESS_TOKEN_SECRET);
 
     // Search if user id exists in database
     const user = await User.findById(decoded.id);
@@ -26,7 +26,7 @@ const verifyUserAuth = async (req, res, next) => {
     next();
   } catch (err) {
     res.locals.user = null;
-    res.status(401).redirect('/user/login');
+    res.status(401).send('no access');
   }
 };
 

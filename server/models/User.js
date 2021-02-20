@@ -22,7 +22,6 @@ const userSchema = new Schema({
 });
 
 // Fire function before document saved to the database
-// eslint-disable-next-line prettier/prettier
 userSchema.pre('save', async function(next) {
   const salt = await bcrypt.genSalt(10);
 
@@ -33,19 +32,22 @@ userSchema.pre('save', async function(next) {
 });
 
 // Add static method for login
-// eslint-disable-next-line prettier/prettier
 userSchema.static('login', async function(email, password) {
   const user = await this.findOne({ email });
 
-  if (user) {
-    const auth = await bcrypt.compare(password, user.password);
+  if (!user) {
+    throw new Error('no email found');
+  }
 
-    if (auth) {
-      return user;
-    }
+  // Check if password is correct
+  const auth = await bcrypt.compare(password, user.password);
+
+  if (!auth) {
     throw new Error('incorrect password');
   }
-  throw new Error('no email found');
+
+  // Return only user id
+  return user;
 });
 
 const User = model('user', userSchema);
