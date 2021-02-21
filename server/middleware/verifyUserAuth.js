@@ -1,8 +1,4 @@
-const jwt = require('jsonwebtoken');
-// const User = require('../models/User');
-
-require('dotenv').config();
-const { JWT_ACCESS_TOKEN_SECRET } = process.env;
+const { verifyAccessToken } = require('../helpers/tokens');
 
 // Protect routes by verifying user token and checking db
 const verifyUserAuth = async (req, res, next) => {
@@ -18,10 +14,11 @@ const verifyUserAuth = async (req, res, next) => {
     const accessToken = authorization.split(' ')[1];
 
     // Verify jwt token
-    const { user } = await jwt.verify(accessToken, JWT_ACCESS_TOKEN_SECRET);
+    const { user } = await verifyAccessToken(accessToken);
 
     // Save user to the locals
     res.locals.user = user;
+
     next();
   } catch (err) {
     res.locals.user = null;
@@ -29,4 +26,4 @@ const verifyUserAuth = async (req, res, next) => {
   }
 };
 
-module.exports = { verifyUserAuth };
+module.exports = verifyUserAuth;

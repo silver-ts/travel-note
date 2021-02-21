@@ -1,4 +1,7 @@
-// Format error messages for sending to client UI
+/**
+ * Format error messages for sending to the client UI
+ * @param {object} err - error object
+ */
 module.exports = err => {
   const errors = { email: '', password: '', message: err.message };
 

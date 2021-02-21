@@ -21,6 +21,7 @@ const userSchema = new Schema({
   date: { type: Date, default: Date.now },
   refreshToken: {
     type: String,
+    default: null,
   },
 });
 

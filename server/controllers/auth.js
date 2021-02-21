@@ -1,18 +1,18 @@
-const jwt = require('jsonwebtoken');
 const {
   generateAccessToken,
   generateRefreshToken,
   sendAccessToken,
   sendRefreshToken,
+  verifyRefreshToken,
 } = require('../helpers/tokens');
-const { createUser, loginUser } = require('../services/user');
-const formatErrors = require('../helpers/formatErrors');
-const User = require('../models/User');
-
-require('dotenv').config();
 const {
-  JWT_REFRESH_TOKEN_SECRET,
-} = process.env;
+  createUser,
+  loginUser,
+  updateRefreshToken,
+  removeRefreshToken,
+  getCurrentUser,
+} = require('../services/user');
+const formatErrors = require('../helpers/formatErrors');
 
 // Sign up controllers
 const signup_post = async (req, res) => {
@@ -27,7 +27,7 @@ const signup_post = async (req, res) => {
     const accessToken = generateAccessToken(user._id);
 
     // Store jwt refresh token in db
-    await User.findOneAndUpdate({ _id: user._id }, { refreshToken: refreshToken });
+    await updateRefreshToken(user._id, refreshToken);
 
     // Send tokens
     sendAccessToken(res, accessToken, user._id);
@@ -43,6 +43,7 @@ const login_post = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // Login user
     const user = await loginUser(email, password);
 
     // Generate tokens
@@ -50,7 +51,7 @@ const login_post = async (req, res) => {
     const accessToken = generateAccessToken(user._id);
 
     // Store jwt refresh token in db
-    await User.findOneAndUpdate({ _id: user._id }, { refreshToken: refreshToken });
+    await updateRefreshToken(user._id, refreshToken);
 
     // Send tokens
     sendRefreshToken(res, refreshToken);
@@ -65,10 +66,11 @@ const logout_delete = async (req, res) => {
   const refreshToken = req.cookies.jwt;
 
   try {
-    const { user } = await jwt.verify(refreshToken, JWT_REFRESH_TOKEN_SECRET);
+    // Verify jwt refresh token
+    const { user } = verifyRefreshToken(refreshToken);
 
     // Remove refresh token from db
-    await User.findOneAndUpdate({ _id: user }, { refreshToken: null });
+    await removeRefreshToken(user);
 
     // Delete current cookie
     await res.clearCookie('jwt');
@@ -82,19 +84,19 @@ const logout_delete = async (req, res) => {
 };
 
 const refresh_post = async (req, res) => {
+  const refreshToken = req.cookies.jwt;
+
+  // Check if we have a refresh token
+  if (!refreshToken) {
+    res.status(403).send({  message: 'no access', accessToken: null });
+  }
+
   try {
-    const refreshToken = req.cookies.jwt;
-
-    // Check if we have a refresh token
-    if (!refreshToken) {
-      res.status(403).send({  message: 'no access', accessToken: null });
-    }
-
     // Verify jwt refresh token
-    const { user } = await jwt.verify(refreshToken, JWT_REFRESH_TOKEN_SECRET);
+    const { user } = await verifyRefreshToken(refreshToken);
 
     // Check if the use exist in database
-    const currentUser = await User.findById(user);
+    const currentUser = await getCurrentUser(user);
 
     if (!currentUser) {
       res.status(403).send({  message: 'no access', accessToken: null });
@@ -106,17 +108,16 @@ const refresh_post = async (req, res) => {
     }
 
     // If token exists, we'll update tokens
-
-    // Generate tokens
     const newRefreshToken = generateRefreshToken(currentUser._id);
     const newAccessToken = generateAccessToken(currentUser._id);
 
     // Store jwt refresh token in db
-    await User.findOneAndUpdate({ _id: currentUser._id }, { refreshToken: newRefreshToken });
+    await updateRefreshToken(currentUser._id, newRefreshToken);
 
     // Send tokens
     sendRefreshToken(res, newRefreshToken);
     sendAccessToken(res, newAccessToken, user._id);
+
   } catch (err) {
     res.status(403).send({  message: 'no access', accessToken: null });
   }

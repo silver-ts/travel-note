@@ -4,7 +4,6 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const cors = require('cors');
 const authRouter = require('./routes/auth');
-const { verifyUserAuth } = require('./middleware/auth');
 
 // Require variables from .env file
 require('dotenv').config();
@@ -29,8 +28,6 @@ app.use(morgan('dev'));
 app.use(cors({ origin: CORS_ORIGIN, credentials: true }));
 
 // Route middlewares
-app.get('/api/test', (req, res) => res.status(200).send({ username: 'Flavio' }));
 app.use('/api/user', authRouter);
-app.get('/', verifyUserAuth, (req, res) => res.send('main page'));
 
 module.exports = app;

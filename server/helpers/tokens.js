@@ -54,9 +54,23 @@ const sendRefreshToken = (res, refreshToken) => {
   });
 };
 
+/**
+ * Verify jwt refresh token.
+ * @param {string} token - refresh token
+ */
+const verifyRefreshToken = async token => await jwt.verify(token, JWT_REFRESH_TOKEN_SECRET);
+
+/**
+ * Verify jwt access token.
+ * @param {string} token - access token
+ */
+const verifyAccessToken = async token => await jwt.verify(token, JWT_ACCESS_TOKEN_SECRET);
+
 module.exports = {
   generateAccessToken,
   generateRefreshToken,
   sendAccessToken,
   sendRefreshToken,
+  verifyRefreshToken,
+  verifyAccessToken,
 };
