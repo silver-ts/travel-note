@@ -1,32 +1,31 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+// const User = require('../models/User');
 
 require('dotenv').config();
 const { JWT_ACCESS_TOKEN_SECRET } = process.env;
 
 // Protect routes by verifying user token and checking db
 const verifyUserAuth = async (req, res, next) => {
-  const accessToken = req.cookies.jwt;
+  const authorization = req.headers['authorization'];
 
-  if (!accessToken) {
-    // To be in sync with db we should receive user data from db
-    // each time we accessing routes with authentication
+  if (!authorization) {
     res.locals.user = null;
-    return res.status(401).send('no access');
+    res.status(401).send({ error: { message: 'You need to log in' } });
   }
 
   try {
+    // Get token from - 'Bearer token' - header
+    const accessToken = authorization.split(' ')[1];
+
     // Verify jwt token
-    const decoded = await jwt.verify(accessToken, JWT_ACCESS_TOKEN_SECRET);
+    const { user } = await jwt.verify(accessToken, JWT_ACCESS_TOKEN_SECRET);
 
-    // Search if user id exists in database
-    const user = await User.findById(decoded.id);
-
+    // Save user to the locals
     res.locals.user = user;
     next();
   } catch (err) {
     res.locals.user = null;
-    res.status(401).send('no access');
+    res.status(401).send({ error: { message: 'You need to log in' } });
   }
 };
 

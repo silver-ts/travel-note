@@ -17,6 +17,7 @@ if (process.env.NODE_ENV !== 'test') {
   mongoose.connect(MONGO_DB_CONNECT, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   });
 }
 
@@ -25,11 +26,11 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(morgan('dev'));
 // Configures the Access-Control-Allow-Origin CORS header
-app.use(cors({ origin: CORS_ORIGIN }));
+app.use(cors({ origin: CORS_ORIGIN, credentials: true }));
 
 // Route middlewares
 app.get('/api/test', (req, res) => res.status(200).send({ username: 'Flavio' }));
-app.use('/api/auth', authRouter);
+app.use('/api/user', authRouter);
 app.get('/', verifyUserAuth, (req, res) => res.send('main page'));
 
 module.exports = app;

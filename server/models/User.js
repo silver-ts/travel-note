@@ -19,6 +19,9 @@ const userSchema = new Schema({
     minLength: [6, 'Password should be at least 6 characters in length'],
   },
   date: { type: Date, default: Date.now },
+  refreshToken: {
+    type: String,
+  },
 });
 
 // Fire function before document saved to the database
@@ -36,14 +39,14 @@ userSchema.static('login', async function(email, password) {
   const user = await this.findOne({ email });
 
   if (!user) {
-    throw new Error('no email found');
+    throw new Error('User doesn\'t exist');
   }
 
   // Check if password is correct
   const auth = await bcrypt.compare(password, user.password);
 
   if (!auth) {
-    throw new Error('incorrect password');
+    throw new Error('Password is not correct');
   }
 
   // Return only user id
