@@ -19,7 +19,7 @@ afterAll(async () => await db.close());
 
 // Login tests
 describe('POST /api/user/login', () => {
-  test('It should return user on login success', async done => {
+  test('It should return user & token on login success', async done => {
     // Create user a new user in db
     await User.create(USER_REQUEST);
 
@@ -29,18 +29,56 @@ describe('POST /api/user/login', () => {
       .send(USER_REQUEST)
       .expect(200)
       .then(res => {
-        expect(res.body.user).toBeTruthy();
+        expect(res.body.user.accessToken).toBeTruthy();
         done();
       });
   });
 
-  test('It should throw incorrect input error', done => {
+  test('It should throw error when no user exists', done => {
     agent
       .post('/api/user/login')
       .send(USER_REQUEST)
       .expect(401)
       .then(res => {
         expect(res.body.errors.email).toBeTruthy();
+        expect(res.body.errors.password).toBeTruthy();
+        done();
+      });
+  });
+
+  test('It should throw error when email is invalid', async done => {
+    // Create user a new user in db
+    await User.create(USER_REQUEST);
+
+    // Login with new user credentials
+    await agent
+      .post('/api/user/login')
+      .send({
+        email: 'wrong@email.com',
+        password: 'password1234',
+      })
+      .expect(401)
+      .then(res => {
+        expect(res.body.errors).toBeTruthy();
+        expect(res.body.errors.email).toBeTruthy();
+        done();
+      });
+  });
+
+  test('It should throw error when password is invalid', async done => {
+    // Create user a new user in db
+    await User.create(USER_REQUEST);
+
+    // Login with new user credentials
+    await agent
+      .post('/api/user/login')
+      .send({
+        email: 'example@test.com',
+        password: 'wrongpassword',
+      })
+      .expect(401)
+      .then(res => {
+        expect(res.body.errors).toBeTruthy();
         expect(res.body.errors.password).toBeTruthy();
         done();
       });
@@ -53,7 +91,7 @@ describe('POST /api/user/signup', () => {
     agent
       .post('/api/user/signup')
       .send(USER_REQUEST)
-      .expect(201)
+      .expect(200)
       .then(res => {
         expect(res.body.user).toBeTruthy();
         done();
@@ -105,7 +143,7 @@ describe('POST /api/user/signup', () => {
   });
 
 
-  test('It should create a cookie with JWT access token', async done => {
+  test('It should create a cookie with JWT refresh token', async done => {
     let Cookies;
 
     await agent
@@ -117,15 +155,77 @@ describe('POST /api/user/signup', () => {
         Cookies = res.headers['set-cookie'].pop().split(';')[0];
       });
 
-    const req = agent.get('/');
+    const req = agent.get('/api/user/');
     req.cookies = Cookies;
 
-    req.end(function(err, res) {
-      if (err) {return done(err);}
-      expect(res.text).toBe('main page');
-      expect(res.status).toBe(200);
-      done();
-    });
+    expect(req.cookies).toBeTruthy();
+    done();
+  });
+});
+
+// Refresh token tests
+describe('POST /api/user/refresh-token', () => {
+  test('It should refresh tokens', async done => {
+    // Create user a new user in db
+    await User.create(USER_REQUEST);
+
+    // Log in user
+    await agent.post('/api/user/login').send(USER_REQUEST);
+
+    // Generate new tokens
+    await agent
+      .post('/api/user/refresh-token')
+      .send(USER_REQUEST)
+      .expect(200)
+      .then(res => {
+        expect(res.body.user.accessToken).toBeTruthy();
+        done();
+      });
   });
 
+  test('It should return empty access token when not login', done => {
+    agent
+      .post('/api/user/refresh-token')
+      .expect(200)
+      .then(res => {
+        expect(res.body.user.accessToken).toBeNull();
+        done();
+      });
+  });
 });
+
+// Logout tests
+describe('POST /api/user/logout', () => {
+  test('It should clear cookies and remove token from db', async done => {
+    // Create user a new user in db
+    await User.create(USER_REQUEST);
+
+    // Log in to generate tokens
+    await agent.post('/api/user/login').send(USER_REQUEST);
+
+    // Log out user
+    await agent
+      .delete('/api/user/logout')
+      .expect(200);
+
+    // Should fail when there's no token in db
+    await agent
+      .post('/api/user/refresh-token')
+      .expect(200)
+      .then(res => {
+        expect(res.body.user.accessToken).toBeNull();
+        done();
+      });
+  });
+
+  test('It should return empty access token when not login', done => {
+    agent
+      .post('/api/user/refresh-token')
+      .expect(200)
+      .then(res => {
+        expect(res.body.user.accessToken).toBeNull();
+        done();
+      });
+  });
+});
+
