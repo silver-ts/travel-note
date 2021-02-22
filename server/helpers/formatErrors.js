@@ -3,7 +3,7 @@
  * @param {object} err - error object
  */
 module.exports = err => {
-  const errors = { email: '', password: '', message: err.message };
+  const errors = { email: '', password: '' };
 
   // Check if user email is unique
   if (err.code === 11000) {
@@ -20,8 +20,8 @@ module.exports = err => {
 
   // Check if login email is registered or password is correct
   if (
-    err.message === 'incorrect password' ||
-    err.message === 'no email found'
+    err.message === 'User does not exist' ||
+    err.message === 'Password is not correct'
   ) {
     const errorMessage = 'Please enter correct email or password';
 

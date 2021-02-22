@@ -30,11 +30,11 @@ const signup_post = async (req, res) => {
     await updateRefreshToken(user._id, refreshToken);
 
     // Send tokens
-    sendAccessToken(res, accessToken, user._id);
     sendRefreshToken(res, refreshToken);
+    sendAccessToken(res, accessToken, { id: user._id, email: user.email });
 
   } catch (err) {
-    res.status(400).send({ error: formatErrors(err) });
+    res.status(400).send({ errors: formatErrors(err) });
   }
 };
 
@@ -55,10 +55,10 @@ const login_post = async (req, res) => {
 
     // Send tokens
     sendRefreshToken(res, refreshToken);
-    sendAccessToken(res, accessToken, user._id);
+    sendAccessToken(res, accessToken, { id: user._id, email: user.email });
 
   } catch (err) {
-    res.status(401).send({ error: { message: err.message } });
+    res.status(401).send({ errors: formatErrors(err) });
   }
 };
 
@@ -79,7 +79,7 @@ const logout_delete = async (req, res) => {
       message: 'Logout success',
     });
   } catch (err) {
-    res.status(401).send({ error: { message: err.message } });
+    res.status(401).send({ errors: { message: err.message } });
   }
 };
 
@@ -88,7 +88,7 @@ const refresh_post = async (req, res) => {
 
   // Check if we have a refresh token
   if (!refreshToken) {
-    res.status(403).send({  message: 'no access', accessToken: null });
+    return res.status(200).send({ message: 'No access', user: { accessToken: null } });
   }
 
   try {
@@ -99,12 +99,12 @@ const refresh_post = async (req, res) => {
     const currentUser = await getCurrentUser(user);
 
     if (!currentUser) {
-      res.status(403).send({  message: 'no access', accessToken: null });
+      return res.status(200).send({ message: 'No access', user: { accessToken: null } });
     }
 
     // If user exists, we should check refresh token stored with this user
     if (currentUser.refreshToken !== refreshToken) {
-      res.status(403).send({  message: 'no access', accessToken: null });
+      return res.status(200).send({ message: 'No access', user: { accessToken: null } });
     }
 
     // If token exists, we'll update tokens
@@ -116,10 +116,10 @@ const refresh_post = async (req, res) => {
 
     // Send tokens
     sendRefreshToken(res, newRefreshToken);
-    sendAccessToken(res, newAccessToken, user._id);
+    sendAccessToken(res, newAccessToken, { id: currentUser._id, email: currentUser.email });
 
   } catch (err) {
-    res.status(403).send({  message: 'no access', accessToken: null });
+    res.status(403).send({ message: 'No access' });
   }
 };
 

@@ -33,12 +33,14 @@ const generateRefreshToken = user =>
  * Send accessToken and user.
  * @param {object} res - pass response
  * @param {string} accessToken - jwt access token
- * @param {string} user - user id
+ * @param {object} payload - user id and email
  */
-const sendAccessToken = (res, accessToken, user) => {
-  res.send({
-    accessToken,
-    user,
+const sendAccessToken = (res, accessToken, payload) => {
+  res.status(200).send({
+    user: {
+      accessToken,
+      ...payload,
+    },
   });
 };
 

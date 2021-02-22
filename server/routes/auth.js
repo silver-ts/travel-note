@@ -5,7 +5,7 @@ const {
   logout_delete,
   refresh_post,
 } = require('../controllers/auth');
-const verifyUserAuth = require('../middleware/verifyUserAuth');
+const verifyUserAuth = require('../middlewares/verifyUserAuth');
 
 const router = Router();
 

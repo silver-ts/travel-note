@@ -40,7 +40,7 @@ userSchema.static('login', async function(email, password) {
   const user = await this.findOne({ email });
 
   if (!user) {
-    throw new Error('User doesn\'t exist');
+    throw new Error('User does not exist');
   }
 
   // Check if password is correct
