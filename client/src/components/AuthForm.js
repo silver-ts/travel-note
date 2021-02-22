@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from '@reach/router';
+import { Link, navigate, Redirect, useLocation } from '@reach/router';
+
+import { registerUser, loginUser } from '../api/user';
+import { useAuth } from '../hooks/useAuth';
 
 import Branding from './icons/Branding';
 
@@ -7,7 +10,25 @@ const AuthForm = () => {
   const { pathname } = useLocation();
   const isLogin = pathname === '/login';
 
-  const [inputField, setInputField] = useState({ email: '', password: '' });
+  const { user, setUser, loading } = useAuth();
+
+  if (loading) {
+    return <div>Loading ...</div>;
+  }
+
+  // If user exists, then navigate to Home page
+  if (user) {
+    return <Redirect from="/login" to="/" noThrow />;
+  }
+
+  const [inputField, setInputField] = useState(isLogin
+    ? {
+      email: 'test@example.com',
+      password: '12345678',
+    }
+    : { email: '', password: '' });
+
+  const [errorMessages, setErrorMessages] = useState(null);
 
   // Controlled inputs values
   const onChangeInputHandler = e => {
@@ -18,8 +39,25 @@ const AuthForm = () => {
   };
 
   // Submit form data to the server
-  const submitFormHandler = e => {
+  const submitFormHandler = async e => {
     e.preventDefault();
+    const { email, password } = inputField;
+
+    try {
+      if (isLogin) {
+        const res = await loginUser(email, password);
+        setUser(res);
+
+      } else {
+        const res = await registerUser(email, password);
+        setUser(res);
+      }
+
+      navigate('/');
+    } catch (err) {
+      setErrorMessages(err.message);
+      console.log(err);
+    }
   };
 
   return (
@@ -39,7 +77,10 @@ const AuthForm = () => {
           </p>
           <form className="flex flex-col" onSubmit={submitFormHandler}>
             <label htmlFor='email' className="mb-3 text-base">Email address
-              <span className="input-error">Error message</span>
+              {errorMessages &&
+                <span className="input-error">
+                  {errorMessages.email}
+                </span>}
             </label>
             <input
               type='text'
@@ -49,8 +90,11 @@ const AuthForm = () => {
               onChange={onChangeInputHandler}
               className="input mb-6">
             </input>
-            <label htmlFor='email' className="mb-3 text-base">Password
-              <span className="input-error">Error message</span>
+            <label htmlFor='password' className="mb-3 text-base">Password
+              {errorMessages &&
+                <span className="input-error">
+                  {errorMessages.password}
+                </span>}
             </label>
             <input
               type='password'
