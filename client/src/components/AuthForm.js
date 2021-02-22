@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, navigate, Redirect, useLocation } from '@reach/router';
 
 import { registerUser, loginUser } from '../api/user';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../hooks';
 
 import Branding from './icons/Branding';
 
@@ -10,25 +10,21 @@ const AuthForm = () => {
   const { pathname } = useLocation();
   const isLogin = pathname === '/login';
 
-  const { user, setUser, loading } = useAuth();
+  const { user, setUser } = useAuth();
 
-  if (loading) {
-    return <div>Loading ...</div>;
-  }
+  // Setup inputs and error messages
+  const [inputField, setInputField] = useState(isLogin
+    ? {
+      email: 'test@example.com',
+      password: 'j5S20m25x1cQ',
+    }
+    : { email: '', password: '' });
+  const [errorMessages, setErrorMessages] = useState(null);
 
   // If user exists, then navigate to Home page
   if (user) {
     return <Redirect from="/login" to="/" noThrow />;
   }
-
-  const [inputField, setInputField] = useState(isLogin
-    ? {
-      email: 'test@example.com',
-      password: '12345678',
-    }
-    : { email: '', password: '' });
-
-  const [errorMessages, setErrorMessages] = useState(null);
 
   // Controlled inputs values
   const onChangeInputHandler = e => {
@@ -45,27 +41,32 @@ const AuthForm = () => {
 
     try {
       if (isLogin) {
+        // Receive user and save it to the local context
         const res = await loginUser(email, password);
-        setUser(res);
+        setUser(res.data.user);
 
       } else {
+        // Receive user and save it to the local context
         const res = await registerUser(email, password);
-        setUser(res);
+        setUser(res.data.user);
       }
 
+      // Redirect to the home page on success
       navigate('/');
     } catch (err) {
-      setErrorMessages(err.message);
-      console.log(err);
+      // Show errors for the input fields
+      setErrorMessages(err.response.data.errors);
     }
   };
 
   return (
     <>
-      <div className="absolute top-1 sm:top-6 left-6">
-        <Branding />
-      </div>
-      <div className="flex justify-center items-center min-h-screen bg-slate-400 sm:bg-transparent">
+      <div className="flex flex-col justify-center items-center min-h-screen bg-slate-400 sm:bg-transparent">
+        <div className="sm:absolute top-1 sm:top-6 left-6">
+          <Link to="/">
+            <Branding />
+          </Link>
+        </div>
         <div className="sm:p-12 p-6 max-w-md sm:max-w-lg w-full rounded-md bg-slate-400">
           <h1 className="font-light text-slate-100 mb-3 uppercase">
             {isLogin ? 'Login' : 'Sign up'}
@@ -77,7 +78,7 @@ const AuthForm = () => {
           </p>
           <form className="flex flex-col" onSubmit={submitFormHandler}>
             <label htmlFor='email' className="mb-3 text-base">Email address
-              {errorMessages &&
+              {errorMessages && errorMessages.email &&
                 <span className="input-error">
                   {errorMessages.email}
                 </span>}
@@ -88,10 +89,11 @@ const AuthForm = () => {
               name='email'
               value={inputField.email}
               onChange={onChangeInputHandler}
+              required
               className="input mb-6">
             </input>
             <label htmlFor='password' className="mb-3 text-base">Password
-              {errorMessages &&
+              {errorMessages && errorMessages.password &&
                 <span className="input-error">
                   {errorMessages.password}
                 </span>}
@@ -102,6 +104,7 @@ const AuthForm = () => {
               name='password'
               value={inputField.password}
               onChange={onChangeInputHandler}
+              required
               className="input mb-10">
             </input>
             <button className="btn mb-8">

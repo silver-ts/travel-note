@@ -11,20 +11,20 @@ const useAuthProvider = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Check if user exists
     const checkUser = async () => {
       try {
-        const response = await checkRefreshToken();
-        console.log(response);
-        setUser(response);
+        const res = await checkRefreshToken();
+        setUser(res.data.user.accessToken && res.data.user);
 
       } catch (err) {
-        console.log(err);
         setUser(null);
       }
 
       setLoading(false);
     };
 
+    // Call async function inside useEffect
     checkUser();
   }, []);
 

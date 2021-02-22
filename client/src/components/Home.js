@@ -2,7 +2,7 @@ import React from 'react';
 import { Redirect, navigate } from '@reach/router';
 
 import { logoutUser } from '../api/user';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../hooks';
 
 const Home = () => {
   const { user, setUser } = useAuth();
