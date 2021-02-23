@@ -4,7 +4,7 @@ import { Link, navigate, Redirect, useLocation } from '@reach/router';
 import { registerUser, loginUser } from '../api/user';
 import { useAuth } from '../hooks';
 
-import Branding from './icons/Branding';
+import { BrandingIcon } from './icons';
 
 const AuthForm = () => {
   const { pathname } = useLocation();
@@ -64,7 +64,7 @@ const AuthForm = () => {
       <div className="flex flex-col justify-center items-center min-h-screen bg-slate-400 sm:bg-transparent">
         <div className="sm:absolute top-1 sm:top-6 left-6">
           <Link to="/">
-            <Branding />
+            <BrandingIcon />
           </Link>
         </div>
         <div className="sm:p-12 p-6 max-w-md sm:max-w-lg w-full rounded-md bg-slate-400">

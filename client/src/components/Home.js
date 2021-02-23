@@ -1,28 +1,30 @@
 import React from 'react';
-import { Redirect, navigate } from '@reach/router';
+import PropTypes from 'prop-types';
+import { Redirect } from '@reach/router';
 
-import { logoutUser } from '../api/user';
 import { useAuth } from '../hooks';
+import Navigation from './Navigation';
 
-const Home = () => {
-  const { user, setUser } = useAuth();
+const Home = ({ children }) => {
+  const { user } = useAuth();
 
   if (!user) {
     return <Redirect from="" to="/login" noThrow  />;
   }
 
-  const logoutHandler = () => {
-    logoutUser();
-    setUser(null);
-    navigate('/login');
-  };
-
   return (
     <>
-      <div>Main content here !</div>
-      <button onClick={logoutHandler}>Logout</button>
+      <Navigation />
+
+      <main className="ml-20">
+        {children}
+      </main>
     </>
   );
+};
+
+Home.propTypes = {
+  children: PropTypes.node,
 };
 
 export default Home;
