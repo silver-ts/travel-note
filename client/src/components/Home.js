@@ -4,6 +4,7 @@ import { Redirect } from '@reach/router';
 
 import { useAuth } from '../hooks';
 import Navigation from './Navigation';
+import { LogEntriesProvider } from '../hooks/useLog';
 
 const Home = ({ children }) => {
   const { user } = useAuth();
@@ -16,9 +17,11 @@ const Home = ({ children }) => {
     <>
       <Navigation />
 
-      <main className="ml-20">
-        {children}
-      </main>
+      <LogEntriesProvider>
+        <main className="pl-20 w-full">
+          {children}
+        </main>
+      </LogEntriesProvider>
     </>
   );
 };

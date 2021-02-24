@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
+
+import { useLogEntries } from '../hooks/useLog';
+import LogEntry from './LogEntry';
 
 // Setup Mapbox access token
 // Read more: https://docs.mapbox.com/mapbox-gl-js/api/properties/#accesstoken
@@ -9,7 +11,9 @@ mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 // Map using Mapbox Dark theme
 // Read more: https://docs.mapbox.com/help/tutorials/use-mapbox-gl-js-with-react/
 // Example: https://github.com/mapbox/mapbox-react-examples/tree/master/basic
-const Map = ({ clicked }) => {
+const Map = () => {
+  const logEntries = useLogEntries();
+
   const mapContainerRef = useRef(null);
 
   // We store the original longitude, latitude, and zoom for the map
@@ -27,7 +31,7 @@ const Map = ({ clicked }) => {
     });
 
     // Add navigation control (the +/- zoom buttons)
-    map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+    map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
     map.on('move', () => {
       setLng(map.getCenter().lng.toFixed(4));
@@ -35,47 +39,43 @@ const Map = ({ clicked }) => {
       setZoom(map.getZoom().toFixed(2));
     });
 
-    // All markers data in json format
-    // const geojson = GeoData;
-
     // add markers to map
-    // geojson.features.forEach(marker => {
-    //   // create a DOM element for the marker
-    //   const el = document.createElement('div');
-    //   el.className = 'marker';
-    //   el.style.backgroundImage = `url(https://placekitten.com/g/${marker.properties.iconSize.join(
-    //     '/',
-    //   )}/)`;
-    //   el.style.width = `${marker.properties.iconSize[0]}px`;
-    //   el.style.height = `${marker.properties.iconSize[1]}px`;
+    logEntries.forEach(marker => {
+      // create a DOM element for the marker
+      const el = document.createElement('div');
 
-    //   el.addEventListener('click', () => {
-    //     window.alert(marker.properties.message);
-    //   });
+      // Add custom marker svg
+      el.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`;
 
-    //   // add marker to map
-    //   new mapboxgl.Marker(el).setLngLat(marker.geometry.coordinates).addTo(map);
-    // });
+      // el.addEventListener('click', () => {
+      //   window.alert(marker.properties.message);
+      // });
+
+      // add marker to map
+      new mapboxgl.Marker(el).setLngLat(marker.location.coordinates).addTo(map);
+    });
 
     // Listener for clicking on the map
-    // map.on('click', () => {
-    //   clicked();
-    // });
+    map.on('click', () => {
+      console.log('click');
+    });
 
     // Clean up on unmount
     return () => map.remove();
-  }, []);
+  }, [logEntries]);
 
   return (
-    <div
-      className="h-screen w-full relative overflow-hidden"
-      ref={mapContainerRef}
-    />
-  );
-};
+    <>
+      <LogEntry />
 
-Map.propTypes = {
-  clicked: PropTypes.func,
+      <div
+        id="map"
+        className="h-screen w-full overflow-hidden relative"
+        ref={mapContainerRef}
+      >
+      </div>
+    </>
+  );
 };
 
 export default Map;

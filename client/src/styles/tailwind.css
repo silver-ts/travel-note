@@ -9,7 +9,7 @@
 
 @layer base {
   body {
-    @apply bg-almostBlack font-primary text-slate-200 min-h-screen text-lg;
+    @apply bg-almostBlack-200 font-primary text-slate-200 min-h-screen text-lg;
   }
 
   h1 {
@@ -62,5 +62,10 @@
       height: 72px;
       opacity: 0;
     }
+  }
+
+  .circle {
+    @apply w-100 h-100 bg-almostBlack-100 rounded-full absolute -top-44 -right-20;
+    z-index: -1;
   }
 }

@@ -2,7 +2,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        almostBlack: '#1C1B21',
+        almostBlack: {
+          100: '#24242B',
+          200: '#1C1B21',
+        },
         slate: {
           100: '#FBFBFC',
           200: '#C3C3C9',
@@ -13,6 +16,10 @@ module.exports = {
       },
       fontFamily: {
         primary: ['Quicksand'],
+      },
+      spacing: {
+        '100': '25rem',
+        '101': '30rem',
       },
     },
   },
