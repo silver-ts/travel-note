@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
+import { useMatch, navigate, useParams } from '@reach/router';
 
 import { useLogEntries } from '../hooks/useLog';
 import LogEntry from './LogEntry';
@@ -8,11 +9,16 @@ import LogEntry from './LogEntry';
 // Read more: https://docs.mapbox.com/mapbox-gl-js/api/properties/#accesstoken
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
-// Map using Mapbox Dark theme
-// Read more: https://docs.mapbox.com/help/tutorials/use-mapbox-gl-js-with-react/
+// Map using Mapbox Dark theme:
+// https://docs.mapbox.com/help/tutorials/use-mapbox-gl-js-with-react/
 // Example: https://github.com/mapbox/mapbox-react-examples/tree/master/basic
 const Map = () => {
   const logEntries = useLogEntries();
+
+  // Check if it's a main page or entry details page
+  const isMainPage = useMatch('/map');
+  const isCreatePage = useMatch('/add-log');
+  const { id } = useParams();
 
   const mapContainerRef = useRef(null);
 
@@ -31,7 +37,7 @@ const Map = () => {
     });
 
     // Add navigation control (the +/- zoom buttons)
-    map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+    // map.addControl(new mapboxgl.NavigationControl(), 'bottom-left');
 
     map.on('move', () => {
       setLng(map.getCenter().lng.toFixed(4));
@@ -45,19 +51,22 @@ const Map = () => {
       const el = document.createElement('div');
 
       // Add custom marker svg
-      el.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-map-pin"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`;
+      el.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`;
 
-      // el.addEventListener('click', () => {
-      //   window.alert(marker.properties.message);
-      // });
+      // Add event listener to the marker
+      el.addEventListener('click', () => {
+        navigate(`/${marker._id}`);
+      });
 
       // add marker to map
       new mapboxgl.Marker(el).setLngLat(marker.location.coordinates).addTo(map);
     });
 
     // Listener for clicking on the map
-    map.on('click', () => {
-      console.log('click');
+    map.on('dblclick', () => {
+      console.log('dblclick');
+
+      navigate('/add-log');
     });
 
     // Clean up on unmount
@@ -66,7 +75,8 @@ const Map = () => {
 
   return (
     <>
-      <LogEntry />
+      {isCreatePage && <LogEntry isCreate />}
+      {!isMainPage && !isCreatePage && <LogEntry data={logEntries.filter(log => log._id === id)[0]} />}
 
       <div
         id="map"
