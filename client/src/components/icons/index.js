@@ -3,9 +3,9 @@ import { default as GithubIcon } from './Github';
 import { default as MapIcon } from './Map';
 import { default as MenuIcon } from './Menu';
 import { default as SettingsIcon } from './Settings';
-import { default as AddIcon } from './Add';
 import { default as LogoIcon } from './Logo';
 import { default as EditIcon } from './Edit';
+import { default as MarkerIcon } from './Marker';
 
 export {
   BrandingIcon,
@@ -13,7 +13,7 @@ export {
   MapIcon,
   MenuIcon,
   SettingsIcon,
-  AddIcon,
   LogoIcon,
   EditIcon,
+  MarkerIcon,
 };
