@@ -68,4 +68,17 @@
     @apply w-100 h-100 bg-almostBlack-100 rounded-full absolute -top-44 -right-20;
     z-index: -1;
   }
+
+  .nav-link {
+    @apply mr-4 sm:mr-0 transition-all hover:text-white p-4 cursor-pointer;
+  }
+
+  /* Style mapbox attribution box */
+  #map .mapboxgl-ctrl-attrib {
+    @apply bg-transparent;
+  }
+
+  #map .mapboxgl-ctrl-attrib a {
+    @apply text-white;
+  }
 }
