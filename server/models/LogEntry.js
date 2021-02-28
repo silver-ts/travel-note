@@ -3,7 +3,8 @@ const { Schema, model } = require('mongoose');
 // GeoJSON point schema
 // Read more: https://mongoosejs.com/docs/geojson.html
 const PointSchema = new Schema({
-  name: String,
+  country: String,
+  place: String,
   type: {
     type: String,
     enum: ['Point'],

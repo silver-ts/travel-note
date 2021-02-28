@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { navigate } from '@reach/router';
 
 import { EditIcon } from './icons';
+import { createLogEntry } from '../api/logs';
 
 const TITLE_CHAR_LIMIT = 50;
 const CONTENT_CHAR_LIMIT = 200;
 
-const LogEntry = ({ isCreate, data }) => {
+const LogEntry = ({ isCreate, data, onCancel, location }) => {
   const [edit, setEdit] = useState(isCreate);
 
   // Setup inputs and error messages
-  const [inputField, setInputField] = useState({
-    title: data && data.title || '',
-    date: '',
-    content: data && data.content || '',
+  const [inputField, setInputField] = useState(data || {
+    title: '',
+    visitDate: '',
+    content: '',
   });
 
   // Setup characters limit for inputs
@@ -23,10 +23,24 @@ const LogEntry = ({ isCreate, data }) => {
     content: 0,
   });
 
-  const submitLogHandler = e => {
+  const submitLogHandler = async e => {
     e.preventDefault();
 
-    console.log('submit');
+    // Save entry to the database
+    try {
+      await createLogEntry({
+        title: inputField.title,
+        visitDate: inputField.visitDate,
+        content: inputField.content,
+        location: {
+          ...location,
+          type: 'Point',
+        },
+
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   // Controlled inputs values
@@ -40,7 +54,7 @@ const LogEntry = ({ isCreate, data }) => {
 
   const cancelFormHandler = () => {
     if (isCreate) {
-      navigate('/map');
+      onCancel();
     }
 
     setEdit(false);
@@ -57,22 +71,24 @@ const LogEntry = ({ isCreate, data }) => {
             type="text"
             name="title"
             className="input"
+            maxLength={TITLE_CHAR_LIMIT}
             value={inputField.title}
             onChange={onChangeInputHandler} />
           <p className="text-right text-base">{`${charCount.title}/${TITLE_CHAR_LIMIT}`}</p>
 
-          <label htmlFor="date">Date</label>
+          <label htmlFor="visitDate">Visit date</label>
           <input
             type="date"
-            name="date"
+            name="visitDate"
             className="input"
-            value={inputField.date}
+            value={inputField.visitDate}
             onChange={onChangeInputHandler} />
 
           <label htmlFor="content">Content</label>
           <textarea
             name="content"
             className="input"
+            maxLength={CONTENT_CHAR_LIMIT}
             value={inputField.content}
             onChange={onChangeInputHandler} />
           <p className="text-right text-base">{`${charCount.content}/${CONTENT_CHAR_LIMIT}`}</p>
@@ -110,6 +126,12 @@ LogEntry.propTypes = {
     _id: PropTypes.string.isRequired,
     visitDate: PropTypes.string.isRequired,
     location: PropTypes.object.isRequired,
+  }),
+  onCancel: PropTypes.func.isRequired,
+  location: PropTypes.shape({
+    country: PropTypes.string,
+    place: PropTypes.string,
+    coordinates: PropTypes.array.isRequired,
   }),
 };
 
