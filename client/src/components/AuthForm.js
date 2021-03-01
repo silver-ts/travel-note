@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Link, navigate, Redirect, useLocation } from '@reach/router';
 
-import { registerUser, loginUser } from '../api/user';
+import { registerUser, loginUser } from '../api';
 import { useAuth } from '../hooks';
-
 import { BrandingIcon } from './icons';
 
 const AuthForm = () => {
@@ -21,7 +20,6 @@ const AuthForm = () => {
     : { email: '', password: '' });
   const [errorMessages, setErrorMessages] = useState(null);
 
-  // If user exists, then navigate to Home page
   if (user) {
     return <Redirect from="/login" to="/" noThrow />;
   }
@@ -51,10 +49,8 @@ const AuthForm = () => {
         setUser(res.data.user);
       }
 
-      // Redirect to the home page on success
       navigate('/');
     } catch (err) {
-      // Show errors for the input fields
       setErrorMessages(err.response.data.errors);
     }
   };

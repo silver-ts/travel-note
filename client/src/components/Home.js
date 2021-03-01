@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from '@reach/router';
 
-import { useAuth } from '../hooks';
+import { useAuth, LogEntriesProvider } from '../hooks';
 import Navigation from './Navigation';
-import { LogEntriesProvider } from '../hooks/useLog';
 
 const Home = ({ children }) => {
   const { user } = useAuth();

@@ -8,7 +8,7 @@ const NavLink = ({ to, children }, props) => (
   <Match path={to}>
     {({ match }) => (
       <li className={`nav-link ${match ? 'text-white' : null}`} {...props}>
-        <Link to={to}>{children}</Link>
+        <Link to={to} className="block p-4">{children}</Link>
       </li>
     )}
   </Match>

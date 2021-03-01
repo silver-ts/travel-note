@@ -1,7 +1,7 @@
 import React from 'react';
 import { navigate } from '@reach/router';
 
-import { logoutUser } from '../api/user';
+import { logoutUser } from '../api';
 import { useAuth } from '../hooks';
 
 const Settings = () => {

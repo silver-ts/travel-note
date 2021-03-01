@@ -3,14 +3,12 @@ const LogEntry = require('../models/LogEntry');
 const logs_post = async (req, res) => {
   const data = req.body;
 
-  console.log(data);
-
   try {
     const result = await LogEntry.create(data);
 
     res.send(result);
   } catch (err) {
-    res.send(err);
+    res.status(400).send(err);
   }
 };
 

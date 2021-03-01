@@ -15,6 +15,14 @@
   h1 {
     @apply text-4xl;
   }
+
+  textarea {
+    resize: none;
+  }
+
+  main {
+    @apply overflow-hidden;
+  }
 }
 
 @layer components {
@@ -70,7 +78,7 @@
   }
 
   .nav-link {
-    @apply mr-4 sm:mr-0 transition-all hover:text-white p-4 cursor-pointer;
+    @apply mr-4 sm:mr-0 transition-all hover:text-white cursor-pointer;
   }
 
   /* Style mapbox attribution box */
@@ -80,5 +88,18 @@
 
   #map .mapboxgl-ctrl-attrib a {
     @apply text-white;
+  }
+
+  .map {
+    @apply h-screen overflow-hidden text-xs absolute inset-0 ml-20;
+    width: calc(100% - 80px);
+  }
+
+  .map--shrink {
+    width: calc(100% - 560px);
+  }
+
+  .marker {
+    @apply hover:text-salmon cursor-pointer transition-all;
   }
 }

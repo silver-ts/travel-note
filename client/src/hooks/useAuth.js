@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import PropTypes from 'prop-types';
 
-import { checkRefreshToken } from '../api/user';
+import { checkRefreshToken } from '../api';
 
 const UserContext = createContext(null);
 

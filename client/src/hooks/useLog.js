@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import { getLogEntriesList } from '../api/logs';
+import { getLogEntriesList } from '../api';
 
 const LogContext = createContext({});
 
@@ -23,7 +23,7 @@ const useLogs = () => {
     getEntries();
   }, []);
 
-  return logEntries;
+  return { logEntries, getEntries };
 };
 
 const LogEntriesProvider = ({ children }) => {

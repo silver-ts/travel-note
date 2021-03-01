@@ -5,6 +5,13 @@ import Loading from './Loading';
 import NotFound from './NotFound';
 import Navigation from './Navigation';
 import Map from './Map';
+import NavLink from './NavLink';
+import LogEntry from './LogEntry';
+import Settings from './Settings';
+import MarkerPopup from './MarkerPopup';
+
+import { notifySuccess, notifyFailure } from './Notify';
+import App from './App';
 
 export {
   AuthForm,
@@ -14,4 +21,11 @@ export {
   NotFound,
   Navigation,
   Map,
+  NavLink,
+  LogEntry,
+  Settings,
+  notifySuccess,
+  notifyFailure,
+  MarkerPopup,
+  App,
 };

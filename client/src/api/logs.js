@@ -7,9 +7,11 @@ export const getLogEntriesList = async () => await axios.get('/api/logs/');
 
 /**
  * Create a new log entry
- * @param {*} entry - entry data
+ * @param {object} entry - log data (LogEntry model)
  */
-export const createLogEntry = async entry => await axios.post('/api/logs', entry);
+export const createLogEntry = async entry => await axios.post(
+  '/api/logs', entry,
+);
 
 /**
   * Get location from the Mapbox Geocoding API
@@ -22,11 +24,12 @@ export const getEntryLocation = async (longitude, latitude) => {
   const filters = 'types=country,place&';
   const token = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
-  const res = await axios.get(`${path}${longitude},${latitude}.json?${filters}access_token=${token}`);
-  console.log(res);
+  const response = await axios.get(
+    `${path}${longitude},${latitude}.json?${filters}access_token=${token}`,
+  );
 
   // Format response to return place name and country
-  const data = res.data.features.reduce((location, item) => {
+  const data = response.data.features.reduce((location, item) => {
     const name = item.place_type[0];
     const value = item.text;
 
