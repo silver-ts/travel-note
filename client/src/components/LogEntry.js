@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { navigate } from '@reach/router';
 
+import { createLogEntry } from '../api';
+import { useLogEntries } from '../hooks';
+import { notifySuccess, notifyFailure } from './Notify';
 import { EditIcon } from './icons';
-import { createLogEntry } from '../api/logs';
 
-const TITLE_CHAR_LIMIT = 50;
-const CONTENT_CHAR_LIMIT = 200;
+import s from '../settings';
 
-const LogEntry = ({ isCreate, data, onCancel, location }) => {
+const LogEntry = ({ isCreate, data, onCancel, entryLocation }) => {
   const [edit, setEdit] = useState(isCreate);
+
+  const { getEntries } = useLogEntries();
 
   // Setup inputs and error messages
   const [inputField, setInputField] = useState(data || {
@@ -33,13 +37,19 @@ const LogEntry = ({ isCreate, data, onCancel, location }) => {
         visitDate: inputField.visitDate,
         content: inputField.content,
         location: {
-          ...location,
+          ...entryLocation,
           type: 'Point',
         },
-
       });
+
+      notifySuccess('Successfully saved.');
+      navigate('/map');
+      onCancel();
+
+      getEntries();
     } catch (err) {
       console.log(err);
+      notifyFailure('Can\'t save right now.');
     }
   };
 
@@ -47,8 +57,12 @@ const LogEntry = ({ isCreate, data, onCancel, location }) => {
   const onChangeInputHandler = e => {
     const value = e.target.value;
     const name = e.target.name;
+    const hasCharLimit = Object.keys(charCount).includes(name);
 
-    setCharCount({ ...charCount, [name]: value.length });
+    if (hasCharLimit) {
+      setCharCount({ ...charCount, [name]: value.length });
+    }
+
     setInputField({ ...inputField, [name]: value });
   };
 
@@ -66,32 +80,36 @@ const LogEntry = ({ isCreate, data, onCancel, location }) => {
         <div className="circle"></div>
 
         <form className="flex flex-col" onSubmit={submitLogHandler}>
-          <label htmlFor="title">Title</label>
+          <label htmlFor="title" className="mb-3">Title</label>
           <input
             type="text"
             name="title"
-            className="input"
-            maxLength={TITLE_CHAR_LIMIT}
+            className="input mb-2"
+            maxLength={s.TITLE_CHAR_LIMIT}
+            required
             value={inputField.title}
             onChange={onChangeInputHandler} />
-          <p className="text-right text-base">{`${charCount.title}/${TITLE_CHAR_LIMIT}`}</p>
+          <p className="text-right text-base">{`${charCount.title}/${s.TITLE_CHAR_LIMIT}`}</p>
 
-          <label htmlFor="visitDate">Visit date</label>
+          <label htmlFor="visitDate" className="mb-3">Visit date</label>
           <input
             type="date"
             name="visitDate"
-            className="input"
+            className="input mb-8"
+            required
             value={inputField.visitDate}
             onChange={onChangeInputHandler} />
 
-          <label htmlFor="content">Content</label>
+          <label htmlFor="content" className="mb-3">Content</label>
           <textarea
             name="content"
-            className="input"
-            maxLength={CONTENT_CHAR_LIMIT}
+            className="input mb-2 h-100"
+            rows="10"
+            required
+            maxLength={s.CONTENT_CHAR_LIMIT}
             value={inputField.content}
             onChange={onChangeInputHandler} />
-          <p className="text-right text-base">{`${charCount.content}/${CONTENT_CHAR_LIMIT}`}</p>
+          <p className="text-right text-base">{`${charCount.content}/${s.CONTENT_CHAR_LIMIT}`}</p>
 
           <div className="flex items-center">
             <button className="btn my-3">Submit</button>
@@ -128,7 +146,7 @@ LogEntry.propTypes = {
     location: PropTypes.object.isRequired,
   }),
   onCancel: PropTypes.func.isRequired,
-  location: PropTypes.shape({
+  entryLocation: PropTypes.shape({
     country: PropTypes.string,
     place: PropTypes.string,
     coordinates: PropTypes.array.isRequired,
