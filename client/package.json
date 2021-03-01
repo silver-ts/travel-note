@@ -15,8 +15,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build:css": "postcss src/styles/index.css -o src/App.css",
-    "watch:css": "postcss src/styles/index.css -o src/App.css --watch"
+    "build:css": "postcss src/styles/index.css -o src/styles/App.css",
+    "watch:css": "postcss src/styles/index.css -o src/styles/App.css --watch"
   },
   "husky": {
     "hooks": {
@@ -52,9 +52,10 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
-    "mapbox-gl": "^2.1.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-hot-toast": "^1.0.2",
+    "react-map-gl": "^6.1.10",
     "react-scripts": "4.0.2",
     "web-vitals": "^1.0.1"
   },
