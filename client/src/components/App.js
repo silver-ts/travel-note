@@ -12,10 +12,8 @@ import {
   PageLoading,
   Map,
   Settings,
+  EntriesList,
 } from '.';
-
-// Add component LATER
-const Logs = () => <div>list</div>;
 
 const App = () => (
   <>
@@ -33,7 +31,7 @@ const App = () => (
           {/* Main app routes */}
           <Home path="/">
             <Settings path="/settings" />
-            <Logs path="/logs" />
+            <EntriesList path="/logs" />
             <Map path="/:id" />
           </Home>
 

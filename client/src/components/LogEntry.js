@@ -3,16 +3,18 @@ import PropTypes from 'prop-types';
 import { navigate } from '@reach/router';
 
 import { createLogEntry } from '../api';
-import { useLogEntries } from '../hooks';
+import { useLogEntries, useAuth } from '../hooks';
 import { notifySuccess, notifyFailure } from './Notify';
 import { EditIcon } from './icons';
+import { localeDate } from '../utils';
 
 import s from '../settings';
 
-const LogEntry = ({ isCreate, data, onCancel, entryLocation }) => {
-  const [edit, setEdit] = useState(isCreate);
-
+const LogEntry = ({ isCreate, data, onClose, entryLocation }) => {
+  const { user } = useAuth();
   const { getEntries } = useLogEntries();
+
+  const [edit, setEdit] = useState(isCreate);
 
   // Setup inputs and error messages
   const [inputField, setInputField] = useState(data || {
@@ -30,26 +32,29 @@ const LogEntry = ({ isCreate, data, onCancel, entryLocation }) => {
   const submitLogHandler = async e => {
     e.preventDefault();
 
+    if (isCreate) {
     // Save entry to the database
-    try {
-      await createLogEntry({
-        title: inputField.title,
-        visitDate: inputField.visitDate,
-        content: inputField.content,
-        location: {
-          ...entryLocation,
-          type: 'Point',
-        },
-      });
+      try {
+        await createLogEntry({
+          title: inputField.title,
+          visitDate: inputField.visitDate,
+          content: inputField.content,
+          location: {
+            ...entryLocation,
+            type: 'Point',
+          },
+        });
 
-      notifySuccess('Successfully saved.');
-      navigate('/map');
-      onCancel();
+        notifySuccess('Successfully saved.');
+        navigate('/map');
+        onClose();
 
-      getEntries();
-    } catch (err) {
-      console.log(err);
-      notifyFailure('Can\'t save right now.');
+        getEntries();
+      } catch (err) {
+        notifyFailure('Can\'t save right now.');
+      }
+    } else {
+      console.log('edit submit');
     }
   };
 
@@ -68,15 +73,25 @@ const LogEntry = ({ isCreate, data, onCancel, entryLocation }) => {
 
   const cancelFormHandler = () => {
     if (isCreate) {
-      onCancel();
+      onClose();
     }
 
     setEdit(false);
   };
 
+  const editLogHandler = () => {
+    setEdit(true);
+    setInputField({
+      title: data.title,
+      // Format date to the "yyyy-mm-dd" format
+      visitDate: new Date(data.visitDate).toISOString().slice(0, 10),
+      content: data.content,
+    });
+  };
+
   if (edit) {
     return (
-      <section className="absolute top-0 right-0 h-screen z-10 left-auto bottom-auto bg-slate-400 px-12 pt-32 pb-12 w-101 overflow-hidden">
+      <section className="absolute top-0 right-0 h-screen left-auto bottom-auto bg-slate-400 px-12 pt-32 pb-12 w-101 overflow-hidden z-40">
         <div className="circle"></div>
 
         <form className="flex flex-col" onSubmit={submitLogHandler}>
@@ -121,15 +136,40 @@ const LogEntry = ({ isCreate, data, onCancel, entryLocation }) => {
   }
 
   return (
-    <section className="absolute top-0 right-0 h-screen z-10 left-auto bottom-auto bg-slate-400 px-12 pt-32 pb-12 w-101 overflow-hidden">
+    <section className="absolute top-0 right-0 h-screen z-40 left-auto bottom-auto bg-slate-400 px-12 pt-32 pb-12 w-101 overflow-hidden">
       <div className="circle"></div>
-      <header className="flex justify-between items-center pb-5 text-4xl">
-        <h2>{data && data.title}</h2>
-        <button onClick={() => setEdit(true)}>
-          <EditIcon />
-        </button>
-      </header>
-      <div>{data && data.content}</div>
+      <div className="divide-y divide-slate-300">
+        <header className="flex justify-between items-center pb-5 text-4xl">
+          <h2 className="text-slate-100">{data && data.title}</h2>
+          <button onClick={editLogHandler}>
+            <EditIcon />
+          </button>
+        </header>
+        <div>
+          <p className="pt-5 mb-10 text-slate-200">
+            {data && data.content}
+          </p>
+          <footer className="text-slate-300 text-base">
+            <p className="mb-1">
+              <span className="font-bold">
+                {data &&
+                 data.location.place ? `${data.location.place}, ` : null}
+                {data && data.location.country}
+              </span>
+            </p>
+            <p className="mb-1">Visited date:{' '}
+              <span className="font-bold">
+                {data && localeDate(data.visitDate)}
+              </span>
+            </p>
+            <p>Created by:{' '}
+              <span className="font-bold">
+                {user && user.email}
+              </span>
+            </p>
+          </footer>
+        </div>
+      </div>
     </section>
   );
 };
@@ -145,7 +185,7 @@ LogEntry.propTypes = {
     visitDate: PropTypes.string.isRequired,
     location: PropTypes.object.isRequired,
   }),
-  onCancel: PropTypes.func.isRequired,
+  onClose: PropTypes.func,
   entryLocation: PropTypes.shape({
     country: PropTypes.string,
     place: PropTypes.string,

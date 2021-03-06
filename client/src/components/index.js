@@ -9,6 +9,8 @@ import NavLink from './NavLink';
 import LogEntry from './LogEntry';
 import Settings from './Settings';
 import MarkerPopup from './MarkerPopup';
+import EntriesList from './EntriesList';
+import Header from './Header';
 
 import { notifySuccess, notifyFailure } from './Notify';
 import App from './App';
@@ -27,5 +29,7 @@ export {
   notifySuccess,
   notifyFailure,
   MarkerPopup,
+  EntriesList,
+  Header,
   App,
 };

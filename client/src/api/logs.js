@@ -21,7 +21,7 @@ export const createLogEntry = async entry => await axios.post(
 export const getEntryLocation = async (longitude, latitude) => {
   // Read more: https://docs.mapbox.com/api/search/geocoding/#reverse-geocoding
   const path = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
-  const filters = 'types=country,place&';
+  const filters = 'types=country,place&language=en&';
   const token = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
   const response = await axios.get(

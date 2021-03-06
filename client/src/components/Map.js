@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useMatch, useParams } from '@reach/router';
+import { useParams, navigate } from '@reach/router';
 import ReactMapGL, {
   Marker,
   FlyToInterpolator,
@@ -13,6 +13,7 @@ import { useLogEntries } from '../hooks';
 import { MarkerIcon } from './icons';
 import LogEntry from './LogEntry';
 import MarkerPopup from './MarkerPopup';
+import Header from './Header';
 
 import s from '../settings';
 
@@ -20,8 +21,8 @@ import s from '../settings';
 // https://docs.mapbox.com/help/tutorials/use-mapbox-gl-js-with-react/
 // Example: https://github.com/mapbox/mapbox-react-examples/tree/master/basic
 const Map = () => {
-  // const isMainPage = useMatch('/map');
-  // const { id } = useParams();
+  const { id } = useParams();
+  const logID = id !== 'map';
 
   // const [isCreate, setCreate] = useState(false);
   const [addEntryCoordinates, setAddEntryCoordinates] = useState(null);
@@ -68,7 +69,12 @@ const Map = () => {
           onClose={() => setShowPopup(null)}
           anchor="top"
           className="z-40" >
-          <MarkerPopup title={marker.title} content={marker.content} />
+          <MarkerPopup
+            title={marker.title}
+            visitDate={marker.visitDate}
+            country={marker.location.country}
+            clicked={() => navigate(`/${id}`)}
+          />
         </Popup>}
       </React.Fragment>
     );
@@ -105,10 +111,16 @@ const Map = () => {
 
   const closeSidebarHandler = () => {
     setAddEntryCoordinates(null);
+    navigate('/map');
   };
 
   return (
     <>
+      {/* Header */}
+      <div className="absolute z-20 top-10 left-32">
+        <Header />
+      </div>
+
       {/* Map */}
       <ReactMapGL
         {...viewport}
@@ -134,17 +146,15 @@ const Map = () => {
         <LogEntry
           isCreate
           entryLocation={addEntryCoordinates}
-          onCancel={closeSidebarHandler} />
+          onClose={closeSidebarHandler} />
       ) : null }
 
 
-      {/* <LogEntry isCreate location={addEntryCoordinates} onCancel={() => setCreate(false)} /> */}
-
-      {/* {isCreate
-        && <LogEntry
-          isCreate
-          location={addEntryCoordinates}
-          onCancel={() => setCreate(false)} />} */}
+      {/* Details view */}
+      { logID && !addEntryCoordinates
+        ? <LogEntry data={logEntries.filter(entry => entry._id === id)[0]} />
+        : null
+      }
     </>
   );
 };
