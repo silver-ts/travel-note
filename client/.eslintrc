@@ -2,7 +2,8 @@
   "extends": ["@ryuuto829/eslint-config-with-prettier/react", "prettier/react"],
   "env": {
     "browser": true,
-    "node": true
+    "node": true,
+    "jest": true
   },
   "rules": {
     "max-len": ["error", { "code": 80, "tabWidth": 2 }]
