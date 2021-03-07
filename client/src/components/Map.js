@@ -22,7 +22,7 @@ import s from '../settings';
 // Example: https://github.com/mapbox/mapbox-react-examples/tree/master/basic
 const Map = () => {
   const { id } = useParams();
-  const logID = id !== 'map';
+  const isLogID = id !== 'map';
 
   // const [isCreate, setCreate] = useState(false);
   const [addEntryCoordinates, setAddEntryCoordinates] = useState(null);
@@ -111,14 +111,16 @@ const Map = () => {
 
   const closeSidebarHandler = () => {
     setAddEntryCoordinates(null);
-    navigate('/map');
+    // navigate('/map');
   };
+
+  const data = logEntries.filter(entry => entry._id === id)[0];
 
   return (
     <>
       {/* Header */}
       <div className="absolute z-20 top-10 left-32">
-        <Header />
+        <Header logEntries={logEntries} />
       </div>
 
       {/* Map */}
@@ -151,8 +153,8 @@ const Map = () => {
 
 
       {/* Details view */}
-      { logID && !addEntryCoordinates
-        ? <LogEntry data={logEntries.filter(entry => entry._id === id)[0]} />
+      { isLogID && !addEntryCoordinates && data
+        ? <LogEntry data={data} />
         : null
       }
     </>

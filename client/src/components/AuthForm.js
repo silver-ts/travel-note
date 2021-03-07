@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
-import { Link, navigate, Redirect, useLocation } from '@reach/router';
+import PropTypes from 'prop-types';
+import { Link, navigate, Redirect } from '@reach/router';
 
 import { registerUser, loginUser } from '../api';
-import { useAuth } from '../hooks';
 import { BrandingIcon } from './icons';
 
-const AuthForm = () => {
-  const { pathname } = useLocation();
-  const isLogin = pathname === '/login';
-
-  const { user, setUser } = useAuth();
+const AuthForm = ({ path, user, setUser }) => {
+  const isLogin = path === '/login';
 
   // Setup inputs and error messages
   const [inputField, setInputField] = useState(isLogin
@@ -21,7 +18,7 @@ const AuthForm = () => {
   const [errorMessages, setErrorMessages] = useState(null);
 
   if (user) {
-    return <Redirect from="/login" to="/" noThrow />;
+    return <Redirect data-testid="auth-success" from="/login" to="/" noThrow />;
   }
 
   // Controlled inputs values
@@ -38,18 +35,25 @@ const AuthForm = () => {
     const { email, password } = inputField;
 
     try {
+      let response;
+
       if (isLogin) {
         // Receive user and save it to the local context
-        const res = await loginUser(email, password);
-        setUser(res.data.user);
+        response = await loginUser(email, password);
 
       } else {
         // Receive user and save it to the local context
-        const res = await registerUser(email, password);
-        setUser(res.data.user);
+        response = await registerUser(email, password);
       }
 
-      navigate('/');
+      if (response.data.user) {
+        setUser(response.data.user);
+        navigate('/');
+
+      } else {
+        throw new Error('Something went wrong.');
+      }
+
     } catch (err) {
       setErrorMessages(err.response.data.errors);
     }
@@ -57,14 +61,19 @@ const AuthForm = () => {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center min-h-screen bg-slate-400 sm:bg-transparent">
+      <div
+        data-testid="authForm"
+        className="flex flex-col justify-center items-center min-h-screen bg-slate-400 sm:bg-transparent"
+      >
         <div className="sm:absolute top-1 sm:top-6 left-6">
           <Link to="/">
             <BrandingIcon />
           </Link>
         </div>
         <div className="sm:p-12 p-6 max-w-md sm:max-w-lg w-full rounded-md bg-slate-400">
-          <h1 className="font-light text-slate-100 mb-3 uppercase">
+          <h1
+            className="font-light text-slate-100 mb-3 uppercase"
+          >
             {isLogin ? 'Login' : 'Sign up'}
           </h1>
           <p className="mb-12">
@@ -72,7 +81,10 @@ const AuthForm = () => {
               ? 'Sign in to your account to continue'
               : 'Sign up to create a new account'}
           </p>
-          <form className="flex flex-col" onSubmit={submitFormHandler}>
+          <form
+            data-testid="form"
+            className="flex flex-col"
+            onSubmit={submitFormHandler}>
             <label htmlFor='email' className="mb-3 text-base">Email address
               {errorMessages && errorMessages.email &&
                 <span className="input-error">
@@ -103,12 +115,12 @@ const AuthForm = () => {
               required
               className="input mb-10">
             </input>
-            <button className="btn mb-8">
+            <button data-testid="submit" type="submit" className="btn mb-8">
               { isLogin ? 'Sign in' : 'Sign up'}
             </button>
           </form>
           <div className="text-base">
-            <span>or </span>
+            <span>or{' '}</span>
             {isLogin
               ? <Link to='/signup'>Create a new account</Link>
               : <Link to='/login'>Log in to your existing account</Link>}
@@ -117,6 +129,15 @@ const AuthForm = () => {
       </div>
     </>
   );
+};
+
+AuthForm.propTypes = {
+  path: PropTypes.string.isRequired,
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    accessToken: PropTypes.string,
+  }),
+  setUser: PropTypes.func.isRequired,
 };
 
 export default AuthForm;

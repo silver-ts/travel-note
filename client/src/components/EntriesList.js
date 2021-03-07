@@ -7,7 +7,7 @@ const EntriesList = () => (
   <>
     <div className="p-10 pl-12">
 
-      <Header />
+      <Header logEntries={null} />
     </div>
   </>
 );

@@ -2,12 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from '@reach/router';
 
-import { useAuth, LogEntriesProvider } from '../hooks';
+import { LogEntriesProvider } from '../hooks';
 import Navigation from './Navigation';
 
-const Home = ({ children }) => {
-  const { user } = useAuth();
-
+const Home = ({ children, user }) => {
+  // Check if user is authenticated
   if (!user) {
     return <Redirect from="" to="/login" noThrow  />;
   }
@@ -17,7 +16,7 @@ const Home = ({ children }) => {
       <Navigation />
 
       <LogEntriesProvider>
-        <main className="pl-20 w-full">
+        <main data-testid="main" className="pl-20 w-full">
           {children}
         </main>
       </LogEntriesProvider>
@@ -26,6 +25,10 @@ const Home = ({ children }) => {
 };
 
 Home.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.string,
+    accessToken: PropTypes.string,
+  }),
   children: PropTypes.node,
 };
 

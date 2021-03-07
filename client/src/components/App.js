@@ -2,7 +2,7 @@ import React from 'react';
 import { Router, Redirect } from '@reach/router';
 import { Toaster } from 'react-hot-toast';
 
-import { UserProvider } from '../hooks';
+import { useAuth } from '../hooks';
 import '../styles/App.css';
 
 import {
@@ -15,9 +15,11 @@ import {
   EntriesList,
 } from '.';
 
-const App = () => (
-  <>
-    <UserProvider>
+const App = () => {
+  const { user, setUser } = useAuth();
+
+  return (
+    <>
       <PageLoading>
         <Router>
           {/* 404 route */}
@@ -25,11 +27,11 @@ const App = () => (
           <Redirect from="/" to="/map" noThrow />
 
           {/* Auth routes */}
-          <AuthForm path="/login" />
-          <AuthForm path="/signup" />
+          <AuthForm path="/login" user={user} setUser={setUser} />
+          <AuthForm path="/signup" user={user} setUser={setUser} />
 
           {/* Main app routes */}
-          <Home path="/">
+          <Home path="/" user={user}>
             <Settings path="/settings" />
             <EntriesList path="/logs" />
             <Map path="/:id" />
@@ -37,10 +39,11 @@ const App = () => (
 
         </Router>
       </PageLoading>
-    </UserProvider>
 
-    {/* Popup notifications */}
-    <Toaster />
-  </>
-);
+      {/* Popup notifications */}
+      <Toaster />
+    </>
+
+  );
+};
 export default App;

@@ -1,25 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useLogEntries } from '../hooks';
-
-const Header = () => {
-  const { logEntries } = useLogEntries();
+const Header = ({ logEntries }) => {
+  const count = logEntries && logEntries.length ? logEntries.length : '0';
 
   return (
     <>
       <div className="text-2xl font-bold mb-4 text-slate-100 text-shadow">Journey Log</div>
       <p className="text-base text-slate-200">
-        Collection of{' '}
-        <span className="text-slate-100">{logEntries.length}</span>{' '}
-        log entries
+          Collection of{' '}
+        <span data-testid="number" className="text-slate-100">
+          {count}
+        </span>
+        {' '}log entries
       </p>
     </>
   );
 };
 
 Header.propTypes = {
-  // children: PropTypes.node,
+  logEntries: PropTypes.array,
 };
 
 export default Header;
