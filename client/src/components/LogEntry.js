@@ -2,13 +2,20 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { navigate } from '@reach/router';
 
-import { createLogEntry } from '../api';
+import { createLogEntry, updateLogEntry, deleteLogEntry } from '../api';
 import { useLogEntries, useAuth } from '../hooks';
 import { notifySuccess, notifyFailure } from './Notify';
 import { EditIcon } from './icons';
 import { localeDate } from '../utils';
 
 import s from '../settings';
+
+import {
+  Menu,
+  MenuItem,
+  MenuButton,
+} from '@szhsin/react-menu';
+import '@szhsin/react-menu/dist/index.css';
 
 const LogEntry = ({ isCreate, data, onClose, entryLocation }) => {
   const { user } = useAuth();
@@ -49,12 +56,38 @@ const LogEntry = ({ isCreate, data, onClose, entryLocation }) => {
         navigate('/map');
         onClose();
 
-        getEntries();
+        await getEntries();
       } catch (err) {
         notifyFailure('Can\'t save right now.');
       }
     } else {
-      console.log('edit submit');
+      try {
+
+        await updateLogEntry(data._id, {
+          title: inputField.title,
+          visitDate: inputField.visitDate,
+          content: inputField.content,
+        });
+
+        notifySuccess('Log entry was updated.');
+        await getEntries();
+        setEdit(false);
+      } catch (err) {
+        notifyFailure('Can\'t update right now.');
+      }
+    }
+  };
+
+  const deleteLogHandler = async () => {
+    try {
+      await deleteLogEntry(data._id);
+
+      notifySuccess('Log entry was deleted.');
+      await getEntries();
+
+      navigate('/map');
+    } catch (err) {
+      notifyFailure('Can\'t delete right now.');
     }
   };
 
@@ -118,7 +151,7 @@ const LogEntry = ({ isCreate, data, onClose, entryLocation }) => {
           <label htmlFor="content" className="mb-3">Content</label>
           <textarea
             name="content"
-            className="input mb-2 h-100"
+            className="input mb-2 h-100 whitespace-pre-line"
             rows="10"
             required
             maxLength={s.CONTENT_CHAR_LIMIT}
@@ -141,12 +174,28 @@ const LogEntry = ({ isCreate, data, onClose, entryLocation }) => {
       <div className="divide-y divide-slate-300">
         <header className="flex justify-between items-center pb-5 text-4xl">
           <h2 className="text-slate-100">{data && data.title}</h2>
-          <button onClick={editLogHandler}>
-            <EditIcon />
-          </button>
+
+          <div>
+            <Menu
+              className="bg-slate-400 text-slate-100"
+              menuButton={
+                <MenuButton>
+                  <EditIcon />
+                </MenuButton>
+              }>
+              <MenuItem
+                className="bg-slate-400 text-slate-100 hover:bg-slate-300 rounded-md"
+                onClick={editLogHandler}>Edit</MenuItem>
+              <MenuItem
+                className="bg-slate-400 text-slate-100 hover:bg-salmon rounded-md"
+                onClick={deleteLogHandler}>Delete</MenuItem>
+            </Menu>
+          </div>
+
+
         </header>
         <div>
-          <p className="pt-5 mb-10 text-slate-200">
+          <p className="pt-5 mb-10 text-slate-200 whitespace-pre-line">
             {data && data.content}
           </p>
           <footer className="text-slate-300 text-base">

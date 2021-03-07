@@ -44,3 +44,20 @@ export const getEntryLocation = async (longitude, latitude) => {
 
   return data;
 };
+
+/**
+ * Update a log entry by id
+ * @param {string} id - log id
+ * @param {object} data - { title, content, visitDate }
+ */
+export const updateLogEntry = async (id, data) => await axios.put(
+  '/api/logs', { id, data },
+);
+
+/**
+ * Delete log entry by id
+ * @param {string} data - log id
+ */
+export const deleteLogEntry = async id => await axios.delete(
+  '/api/logs', { data: { id } },
+);

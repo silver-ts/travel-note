@@ -1,5 +1,11 @@
 import { registerUser, loginUser, logoutUser, checkRefreshToken } from './user';
-import { getLogEntriesList, createLogEntry, getEntryLocation } from './logs';
+import {
+  getLogEntriesList,
+  createLogEntry,
+  getEntryLocation,
+  updateLogEntry,
+  deleteLogEntry,
+} from './logs';
 
 export {
   registerUser,
@@ -9,4 +15,6 @@ export {
   getLogEntriesList,
   createLogEntry,
   getEntryLocation,
+  updateLogEntry,
+  deleteLogEntry,
 };
