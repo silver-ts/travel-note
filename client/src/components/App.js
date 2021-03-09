@@ -1,6 +1,7 @@
 import React from 'react';
 import { Router, Redirect } from '@reach/router';
 import { Toaster } from 'react-hot-toast';
+import { Helmet } from 'react-helmet';
 
 import { useAuth } from '../hooks';
 import '../styles/App.css';
@@ -20,6 +21,8 @@ const App = () => {
 
   return (
     <>
+      <Helmet titleTemplate="%s | Journey Log" defaultTitle="Journey Log" />
+
       <PageLoading>
         <Router>
           {/* 404 route */}

@@ -1,19 +1,23 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { Helmet } from 'react-helmet';
 
+import { useLogEntries } from '../hooks';
 import Header from './Header';
 
-const EntriesList = () => (
-  <>
-    <div className="p-10 pl-12">
+const EntriesList = () => {
+  // Get list of markers from database
+  const { logEntries } = useLogEntries();
 
-      <Header logEntries={null} />
-    </div>
-  </>
-);
+  return (
+    <>
+      <Helmet title="Log Entries" />
 
-EntriesList.propTypes = {
-  // children: PropTypes.node,
+      <div className="p-10 pl-12">
+
+        <Header logEntries={logEntries} />
+      </div>
+    </>
+  );
 };
 
 export default EntriesList;

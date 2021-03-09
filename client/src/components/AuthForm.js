@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link, navigate, Redirect } from '@reach/router';
+import { Helmet } from 'react-helmet';
 
 import { registerUser, loginUser } from '../api';
 import { BrandingIcon } from './icons';
@@ -61,6 +62,8 @@ const AuthForm = ({ path, user, setUser }) => {
 
   return (
     <>
+      <Helmet title={isLogin ? 'Sign in' : 'Sign up'} />
+
       <div
         data-testid="authForm"
         className="flex flex-col justify-center items-center min-h-screen bg-slate-400 sm:bg-transparent"

@@ -6,6 +6,7 @@ import ReactMapGL, {
   WebMercatorViewport,
   Popup,
 } from 'react-map-gl';
+import { Helmet } from 'react-helmet';
 
 import { getEntryLocation } from '../api';
 import { useLogEntries } from '../hooks';
@@ -24,12 +25,12 @@ const Map = () => {
   const { id } = useParams();
   const isLogID = id !== 'map';
 
+  // Get list of markers from database
+  const { logEntries } = useLogEntries();
+
   // const [isCreate, setCreate] = useState(false);
   const [addEntryCoordinates, setAddEntryCoordinates] = useState(null);
   const [showPopup, setShowPopup] = useState(null);
-
-  // Get list of markers from database
-  const { logEntries } = useLogEntries();
 
   // Map configuration
   const [viewport, setViewport] = useState({
@@ -80,7 +81,6 @@ const Map = () => {
     );
   }), [logEntries, showPopup]);
 
-
   // Fly to marker and center it on the screen
   const goToMarker = (lng, lat) => {
     const { longitude, latitude, zoom } = new WebMercatorViewport(viewport)
@@ -99,6 +99,7 @@ const Map = () => {
     });
   };
 
+  // Add a new marker
   const mapDbclickHandler = async e => {
     const [ lng, lat ] = e.lngLat;
 
@@ -109,17 +110,20 @@ const Map = () => {
     setAddEntryCoordinates({ coordinates: [ lng, lat ], ...location });
   };
 
+  // Hide sidebar
   const closeSidebarHandler = () => {
     setAddEntryCoordinates(null);
-    // navigate('/map');
   };
 
-  const data = logEntries.filter(entry => entry._id === id)[0];
+  // Log entry that matches current id in the useParams
+  const currentEntryLog = logEntries.filter(entry => entry._id === id)[0];
 
   return (
     <>
+      <Helmet title={currentEntryLog ? currentEntryLog.title : 'Home'} />
+
       {/* Header */}
-      <div className="absolute z-20 top-10 left-32">
+      <div data-testid="header" className="absolute z-20 top-10 left-32">
         <Header logEntries={logEntries} />
       </div>
 
@@ -151,10 +155,9 @@ const Map = () => {
           onClose={closeSidebarHandler} />
       ) : null }
 
-
       {/* Details view */}
-      { isLogID && !addEntryCoordinates && data
-        ? <LogEntry data={data} />
+      { isLogID && !addEntryCoordinates && currentEntryLog
+        ? <LogEntry data={currentEntryLog} />
         : null
       }
     </>
