@@ -4,31 +4,40 @@ import { navigate } from '@reach/router';
 
 import { createLogEntry, updateLogEntry, deleteLogEntry } from '../api';
 import { useLogEntries, useAuth } from '../hooks';
-import { notifySuccess, notifyFailure } from './Notify';
-import { EditIcon } from './icons';
-import { localeDate } from '../utils';
-
+import { localeDate, formattedDate } from '../utils';
 import s from '../settings';
 
-import {
-  Menu,
-  MenuItem,
-  MenuButton,
-} from '@szhsin/react-menu';
-import '@szhsin/react-menu/dist/index.css';
+import { notifySuccess, notifyFailure } from './Notify';
+import LogMenu from './LogMenu';
 
-const LogEntry = ({ isCreate, data, onClose, entryLocation }) => {
+const LogEntry = ({
+  isCreate,
+  data,
+  onClose,
+  entryLocation,
+  isEdit,
+}) => {
   const { user } = useAuth();
   const { getEntries } = useLogEntries();
 
-  const [edit, setEdit] = useState(isCreate);
+  // Show edit form when new marker created or clicking menu edit button
+  // from the logs page
+  const [edit, setEdit] = useState(isCreate || isEdit);
 
   // Setup inputs and error messages
-  const [inputField, setInputField] = useState(data || {
-    title: '',
-    visitDate: '',
-    content: '',
-  });
+  const [inputField, setInputField] = useState(data ?
+    {
+      title: data.title,
+      visitDate: formattedDate(data.visitDate),
+      content: data.content,
+    }
+    : {
+      title: '',
+      visitDate: '',
+      content: '',
+    });
+
+  console.log(inputField.visitDate);
 
   // Setup characters limit for inputs
   const [charCount, setCharCount] = useState({
@@ -62,7 +71,6 @@ const LogEntry = ({ isCreate, data, onClose, entryLocation }) => {
       }
     } else {
       try {
-
         await updateLogEntry(data._id, {
           title: inputField.title,
           visitDate: inputField.visitDate,
@@ -174,25 +182,9 @@ const LogEntry = ({ isCreate, data, onClose, entryLocation }) => {
       <div className="divide-y divide-slate-300">
         <header className="flex justify-between items-center pb-5 text-4xl">
           <h2 className="text-slate-100">{data && data.title}</h2>
-
-          <div>
-            <Menu
-              className="bg-slate-400 text-slate-100"
-              menuButton={
-                <MenuButton>
-                  <EditIcon />
-                </MenuButton>
-              }>
-              <MenuItem
-                className="bg-slate-400 text-slate-100 hover:bg-slate-300 rounded-md"
-                onClick={editLogHandler}>Edit</MenuItem>
-              <MenuItem
-                className="bg-slate-400 text-slate-100 hover:bg-salmon rounded-md"
-                onClick={deleteLogHandler}>Delete</MenuItem>
-            </Menu>
-          </div>
-
-
+          <LogMenu
+            deleteLogHandler={deleteLogHandler}
+            editLogHandler={editLogHandler} />
         </header>
         <div>
           <p className="pt-5 mb-10 text-slate-200 whitespace-pre-line">
@@ -225,6 +217,7 @@ const LogEntry = ({ isCreate, data, onClose, entryLocation }) => {
 
 LogEntry.propTypes = {
   isCreate: PropTypes.bool,
+  isEdit: PropTypes.bool,
   data: PropTypes.shape({
     title: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,

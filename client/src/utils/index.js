@@ -1,4 +1,3 @@
-import { FlyToInterpolator } from 'react-map-gl';
-import { localeDate } from './localeDate';
+import { localeDate, formattedDate } from './localeDate';
 
-export { localeDate };
+export { localeDate, formattedDate };

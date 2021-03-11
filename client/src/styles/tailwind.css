@@ -9,7 +9,7 @@
 
 @layer base {
   body {
-    @apply bg-almostBlack-200 font-primary text-slate-200 min-h-screen text-lg;
+    @apply bg-almostBlack-300 font-primary text-slate-200 min-h-screen text-lg;
   }
 
   h1 {

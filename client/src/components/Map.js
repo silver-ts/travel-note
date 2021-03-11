@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import PropTypes from 'prop-types';
 import { useParams, navigate } from '@reach/router';
 import ReactMapGL, {
   Marker,
@@ -10,20 +11,20 @@ import { Helmet } from 'react-helmet';
 
 import { getEntryLocation } from '../api';
 import { useLogEntries } from '../hooks';
+import s from '../settings';
 
 import { MarkerIcon } from './icons';
 import LogEntry from './LogEntry';
 import MarkerPopup from './MarkerPopup';
 import Header from './Header';
 
-import s from '../settings';
-
 // Map using Mapbox Dark theme:
 // https://docs.mapbox.com/help/tutorials/use-mapbox-gl-js-with-react/
 // Example: https://github.com/mapbox/mapbox-react-examples/tree/master/basic
-const Map = () => {
+const Map = ({ location }) => {
   const { id } = useParams();
   const isLogID = id !== 'map';
+  const isEdit = location.state.isEdit;
 
   // Get list of markers from database
   const { logEntries } = useLogEntries();
@@ -157,11 +158,22 @@ const Map = () => {
 
       {/* Details view */}
       { isLogID && !addEntryCoordinates && currentEntryLog
-        ? <LogEntry data={currentEntryLog} />
+        ? <LogEntry
+          isEdit={isEdit}
+          data={currentEntryLog}
+        />
         : null
       }
     </>
   );
+};
+
+Map.propTypes = {
+  location: PropTypes.shape({
+    state: PropTypes.shape({
+      isEdit: PropTypes.bool,
+    }),
+  }),
 };
 
 export default Map;

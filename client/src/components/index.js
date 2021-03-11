@@ -11,6 +11,7 @@ import Settings from './Settings';
 import MarkerPopup from './MarkerPopup';
 import EntriesList from './EntriesList';
 import Header from './Header';
+import LogMenu from './LogMenu';
 
 import { notifySuccess, notifyFailure } from './Notify';
 import App from './App';
@@ -31,5 +32,6 @@ export {
   MarkerPopup,
   EntriesList,
   Header,
+  LogMenu,
   App,
 };

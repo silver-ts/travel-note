@@ -4,7 +4,8 @@ module.exports = {
       colors: {
         almostBlack: {
           100: '#24242B',
-          200: '#1C1B21',
+          200: '#26262D',
+          300: '#1C1B21',
         },
         slate: {
           100: '#FBFBFC',
