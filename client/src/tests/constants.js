@@ -1,0 +1,78 @@
+export const LOG_ENTRIES = [
+  {
+    '_id': '603cef89bb4b813348391548',
+    'title': 'Kakkkkkk',
+    'visitDate': '2021-03-17T00:00:00.000Z',
+    'content': 'sdfasdfasdfasdf',
+    'location': {
+      'coordinates': [
+        31.24804512668594,
+        29.970633453117546,
+      ],
+      '_id': '603cef89bb4b813348391549',
+      'country': 'Egypt',
+      'place': 'Maadi',
+      'type': 'Point',
+    },
+    'createdAt': '2021-03-01T13:43:37.979Z',
+    'updatedAt': '2021-03-01T13:43:37.979Z',
+    '__v': 0,
+  },
+  {
+    '_id': '604481c032bd7b2b08e379fb',
+    'title': 'asdasdas',
+    'visitDate': '2021-03-19T00:00:00.000Z',
+    'content': 'ASHDKASd\nasdasdasdasd\nasd\nasdas\nd',
+    'location': {
+      'coordinates': [
+        12.441766033945246,
+        41.830623049588446,
+      ],
+      '_id': '604481c032bd7b2b08e379fc',
+      'place': 'Rome',
+      'country': 'Italy',
+      'type': 'Point',
+    },
+    'createdAt': '2021-03-07T07:33:20.947Z',
+    'updatedAt': '2021-03-07T07:33:20.947Z',
+    '__v': 0,
+  },
+  {
+    '_id': '60450650a3ac6116085e77f7',
+    'title': '32423432',
+    'visitDate': '2021-03-12T00:00:00.000Z',
+    'content': '2134123521351235',
+    'location': {
+      'coordinates': [
+        44.032040514420096,
+        13.588438820357226,
+      ],
+      '_id': '60450650a3ac6116085e77f8',
+      'place': 'Ta\'izz',
+      'country': 'Yemen',
+      'type': 'Point',
+    },
+    'createdAt': '2021-03-07T16:58:56.843Z',
+    'updatedAt': '2021-03-07T16:58:56.843Z',
+    '__v': 0,
+  },
+  {
+    '_id': '604506a2a3ac6116085e7802',
+    'title': '75675',
+    'visitDate': '2021-03-31T00:00:00.000Z',
+    'content': '5675856785678',
+    'location': {
+      'coordinates': [
+        39.216871278390386,
+        21.55173222076291,
+      ],
+      '_id': '604506a2a3ac6116085e7803',
+      'place': 'Jeddah',
+      'country': 'Saudi Arabia',
+      'type': 'Point',
+    },
+    'createdAt': '2021-03-07T17:00:18.577Z',
+    'updatedAt': '2021-03-07T17:00:18.577Z',
+    '__v': 0,
+  },
+];
