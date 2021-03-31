@@ -37,8 +37,6 @@ const LogEntry = ({
       content: '',
     });
 
-  console.log(inputField.visitDate);
-
   // Setup characters limit for inputs
   const [charCount, setCharCount] = useState({
     title: 0,

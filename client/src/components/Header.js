@@ -1,9 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Header = ({ logEntries }) => {
+const Header = ({ logEntries, title }) => {
   const count = logEntries && logEntries.length ? logEntries.length : '0';
 
+  // Show custom title if defined
+  if (title) {
+    return  (
+      <div className="text-2xl font-bold mb-4 text-slate-100 text-shadow">{title}</div>
+    );
+  }
+
+  // Display main title and stats
   return (
     <>
       <div className="text-2xl font-bold mb-4 text-slate-100 text-shadow">Journey Log</div>
@@ -20,6 +28,7 @@ const Header = ({ logEntries }) => {
 
 Header.propTypes = {
   logEntries: PropTypes.array,
+  title: PropTypes.string,
 };
 
 export default Header;

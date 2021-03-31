@@ -16,7 +16,7 @@ const Home = ({ children, user }) => {
       <Navigation />
 
       <LogEntriesProvider>
-        <main data-testid="main" className="pl-20 w-full">
+        <main data-testid="main" className="pl-0 sm:pl-20 w-full">
           {children}
         </main>
       </LogEntriesProvider>

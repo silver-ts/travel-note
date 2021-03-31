@@ -124,7 +124,7 @@ const Map = ({ location }) => {
       <Helmet title={currentEntryLog ? currentEntryLog.title : 'Home'} />
 
       {/* Header */}
-      <div data-testid="header" className="absolute z-20 top-10 left-32">
+      <div data-testid="header" className="absolute z-20 sm:top-10 sm:left-32 top-3 left-3">
         <Header logEntries={logEntries} />
       </div>
 

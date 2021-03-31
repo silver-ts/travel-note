@@ -5,8 +5,10 @@ import { Helmet } from 'react-helmet';
 import { logoutUser } from '../api';
 import { useAuth } from '../hooks';
 
+import Header from './Header';
+
 const Settings = () => {
-  const { setUser } = useAuth();
+  const { setUser, user: { email } } = useAuth();
 
   const logoutHandler = () => {
     logoutUser();
@@ -18,8 +20,18 @@ const Settings = () => {
     <>
       <Helmet title="Settings" />
 
-      <p>Settings page here !</p>
-      <button onClick={logoutHandler}>Logout</button>
+      <div className="main-wrapper">
+        <Header title="Settings" />
+
+        <div className="mt-10">
+          <p className="mb-3">{`You are logged in as a ${email}`}</p>
+          <button
+            className="btn"
+            onClick={logoutHandler}>
+        Logout
+          </button>
+        </div>
+      </div>
     </>
   );
 };

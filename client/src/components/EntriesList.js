@@ -38,7 +38,7 @@ const EntriesList = () => {
     <>
       <Helmet title="Log Entries" />
 
-      <div className="p-10 pl-12">
+      <div className="main-wrapper">
         <Header logEntries={logEntries} />
 
         <section className="grid grid-cols-4 gap-6 mt-10">
@@ -54,9 +54,9 @@ const EntriesList = () => {
                     deleteLogHandler={() => deleteLogHandler(_id)}
                   />
                 </div>
-                <div className="mt-16">
+                <div className="mt-16 list-ornament">
                   <Link to={`/${_id}`}>
-                    <p className="text-slate-200">{country}</p>
+                    <p className="text-slate-200 text-base">{country}</p>
                     <h3 className="text-white bold text-2xl">{title}</h3>
                   </Link>
                 </div>
