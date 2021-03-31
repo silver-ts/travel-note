@@ -6,7 +6,11 @@
 export const formattedDate = date => new Date(date).toISOString().split('T')[0];
 
 /**
- * Format date string to display "dd/mm/yyyy"
+ * Format date string to display "Feb 10, 2021"
  * @param {string} date
  */
-export const localeDate = date => new Date(date).toLocaleDateString('fr-FR');
+export const localeDate = date => new Date(date).toLocaleString('en-us', {
+  month: 'short',
+  year: 'numeric',
+  day: 'numeric',
+});

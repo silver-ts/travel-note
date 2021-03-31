@@ -1,23 +1,29 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, navigate } from '@reach/router';
 
 import { deleteLogEntry } from '../api';
 import { useLogEntries } from '../hooks';
 import Header from './Header';
-import { localeDate } from '../utils';
+import { localeDate, SORT_VALUES, sortListBy } from '../utils';
 import { notifySuccess, notifyFailure } from './Notify';
 
 import LogMenu from './LogMenu';
+import SortBy from './SortBy';
 
 const EntriesList = () => {
   // Get list of markers from database
   const { logEntries, getEntries } = useLogEntries();
 
-  const sortedLogEntries = useMemo(() => (
-    logEntries.sort((a, b) => new Date(b.visitDate) - new Date(a.visitDate))),
-  [logEntries]);
+  // Find default sorting option
+  const defaultSorting = SORT_VALUES.filter(el => el.default)[0].name;
+  const [sorting, setSorting] = useState(defaultSorting);
 
+  const sortedLogEntries = useMemo(() => (
+    sortListBy(logEntries, sorting)),
+  [logEntries, sorting]);
+
+  // Open current log page details in sidebar
   const editLogHandler = id => {
     navigate(`/${id}`, { state: { isEdit: true } });
   };
@@ -40,6 +46,10 @@ const EntriesList = () => {
 
       <div className="main-wrapper">
         <Header logEntries={logEntries} />
+        <SortBy
+          onSortChangeHandler={setSorting}
+          sortingValues={SORT_VALUES.map(values => values.name)}
+          currentValue={sorting} />
 
         <section className="grid grid-cols-4 gap-6 mt-10">
           {sortedLogEntries && sortedLogEntries.map((log, i) => {

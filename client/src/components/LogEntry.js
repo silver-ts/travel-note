@@ -28,6 +28,7 @@ const LogEntry = ({
   const [inputField, setInputField] = useState(data ?
     {
       title: data.title,
+      // Format date to the "yyyy-mm-dd" format
       visitDate: formattedDate(data.visitDate),
       content: data.content,
     }
@@ -123,7 +124,7 @@ const LogEntry = ({
     setInputField({
       title: data.title,
       // Format date to the "yyyy-mm-dd" format
-      visitDate: new Date(data.visitDate).toISOString().slice(0, 10),
+      visitDate: formattedDate(data.visitDate),
       content: data.content,
     });
   };
