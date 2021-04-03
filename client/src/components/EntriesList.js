@@ -51,7 +51,7 @@ const EntriesList = () => {
           sortingValues={SORT_VALUES.map(values => values.name)}
           currentValue={sorting} />
 
-        <section className="grid grid-cols-4 gap-6 mt-10">
+        <section className="grid auto-cols-fr sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-5 sm:mt-10 max-w-screen-2xl mx-auto">
           {sortedLogEntries && sortedLogEntries.map((log, i) => {
             const { title, location: { country }, visitDate, _id } = log;
 
@@ -74,7 +74,6 @@ const EntriesList = () => {
             );
           })}
         </section>
-
       </div>
     </>
   );

@@ -35,8 +35,8 @@ const Map = ({ location }) => {
 
   // Map configuration
   const [viewport, setViewport] = useState({
-    width: '100%',
-    height: '100vh',
+    width: 100,
+    height: 100,
     latitude: 34,
     longitude: 5,
     zoom: 1.5,
@@ -107,7 +107,14 @@ const Map = ({ location }) => {
     // Get country and place names
     const location = await getEntryLocation(lng, lat);
 
-    goToMarker(lng, lat);
+    // NOTE!
+    // "fItBounds" has right padding 480px, so we need to make sure
+    // that we don't create WebMercatorViewport when viewport is narrow,
+    // in other case app will crush due to the assertion failed error
+    if (viewport.width > 500) {
+      goToMarker(lng, lat);
+    }
+
     setAddEntryCoordinates({ coordinates: [ lng, lat ], ...location });
   };
 
@@ -131,6 +138,8 @@ const Map = ({ location }) => {
       {/* Map */}
       <ReactMapGL
         {...viewport}
+        width="100vw"
+        height="100vh"
         mapStyle="mapbox://styles/mapbox/dark-v10"
         mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
         onViewportChange={setViewport}

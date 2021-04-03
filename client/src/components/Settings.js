@@ -24,11 +24,12 @@ const Settings = () => {
         <Header title="Settings" />
 
         <div className="mt-10">
-          <p className="mb-3">{`You are logged in as a ${email}`}</p>
+          <p className="mb-5">{`You are logged in as a ${email}.`}</p>
           <button
             className="btn"
-            onClick={logoutHandler}>
-        Logout
+            onClick={logoutHandler}
+          >
+          Logout
           </button>
         </div>
       </div>

@@ -135,4 +135,9 @@
   .main-wrapper {
     @apply sm:p-10 sm:pl-12 p-3 sm:mb-36 mb-28;
   }
+
+  /* Read more: https://github.com/visgl/react-map-gl/issues/604#issuecomment-439673570 */
+  .mapboxgl-canvas {
+    left: 0;
+  }
 }

@@ -11,7 +11,7 @@ import '@szhsin/react-menu/dist/index.css';
 import { SortIcon } from './icons';
 
 const SortBy = ({ sortingValues, currentValue, onSortChangeHandler }) => (
-  <div className="absolute right-12 top-20">
+  <div className="sm:absolute right-12 top-20">
     <Menu
       className="bg-slate-400 text-slate-100"
       menuButton={

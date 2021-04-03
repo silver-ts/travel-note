@@ -131,7 +131,7 @@ const LogEntry = ({
 
   if (edit) {
     return (
-      <section className="absolute top-0 right-0 h-screen left-auto bottom-auto bg-slate-400 px-12 pt-32 pb-12 w-101 overflow-hidden z-40">
+      <section className="w-full absolute top-0 sm:right-0 h-screen left-auto bottom-auto bg-slate-400 px-3 sm:px-12 pt-10 sm:pt-32 pb-12 sm:w-101 overflow-x-hidden z-40 overflow-y-auto">
         <div className="circle"></div>
 
         <form className="flex flex-col" onSubmit={submitLogHandler}>
@@ -166,7 +166,7 @@ const LogEntry = ({
             onChange={onChangeInputHandler} />
           <p className="text-right text-base">{`${charCount.content}/${s.CONTENT_CHAR_LIMIT}`}</p>
 
-          <div className="flex items-center">
+          <div className="flex items-center mb-12">
             <button className="btn my-3">Submit</button>
             <button className="ml-5" onClick={cancelFormHandler}>Cancel</button>
           </div>
@@ -176,7 +176,7 @@ const LogEntry = ({
   }
 
   return (
-    <section className="absolute top-0 right-0 h-screen z-40 left-auto bottom-auto bg-slate-400 px-12 pt-32 pb-12 w-101 overflow-hidden">
+    <section className="w-full absolute top-0 sm:right-0 h-screen left-auto bottom-auto bg-slate-400 px-3 sm:px-12 pt-10 sm:pt-32 pb-12 sm:w-101 overflow-x-hidden z-40 overflow-y-auto">
       <div className="circle"></div>
       <div className="divide-y divide-slate-300">
         <header className="flex justify-between items-center pb-5 text-4xl">
