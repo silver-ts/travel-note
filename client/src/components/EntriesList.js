@@ -67,7 +67,7 @@ const EntriesList = () => {
                 <div className="mt-16 list-ornament">
                   <Link to={`/${_id}`}>
                     <p className="text-slate-200 text-base">{country}</p>
-                    <h3 className="text-white bold text-2xl">{title}</h3>
+                    <h3 className="text-white bold text-2xl truncate overflow-hidden">{title}</h3>
                   </Link>
                 </div>
               </article>

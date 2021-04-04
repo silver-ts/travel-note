@@ -39,10 +39,15 @@ const LogEntry = ({
     });
 
   // Setup characters limit for inputs
-  const [charCount, setCharCount] = useState({
-    title: 0,
-    content: 0,
-  });
+  const [charCount, setCharCount] = useState(data ?
+    {
+      title: data.title.length,
+      content: data.content.length,
+    }
+    : {
+      title: 0,
+      content: 0,
+    });
 
   const submitLogHandler = async e => {
     e.preventDefault();
@@ -180,7 +185,7 @@ const LogEntry = ({
       <div className="circle"></div>
       <div className="divide-y divide-slate-300">
         <header className="flex justify-between items-center pb-5 text-4xl">
-          <h2 className="text-slate-100">{data && data.title}</h2>
+          <h2 className="text-slate-100 break-words overflow-hidden">{data && data.title}</h2>
           <LogMenu
             deleteLogHandler={deleteLogHandler}
             editLogHandler={editLogHandler} />
