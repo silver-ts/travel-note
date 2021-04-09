@@ -10,7 +10,6 @@ const verifyUserAuth = require('../middlewares/verifyUserAuth');
 const router = Router();
 
 router.get('/', verifyUserAuth, (req, res) => res.status(200).send({ user: res.locals.user, message: 'protected route' }));
-
 router.post('/signup', signup_post);
 router.post('/login', login_post);
 router.delete('/logout', logout_delete);

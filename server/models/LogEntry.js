@@ -37,6 +37,15 @@ const LogEntrySchema = new Schema({
   timestamps: true,
 });
 
-const LogEntry = model('log', LogEntrySchema);
+const UserLogEntriesSchema = new Schema({
+  _id: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
+  logs: [ { type: Schema.Types.ObjectId, ref: 'log' } ],
+});
 
-module.exports = LogEntry;
+const LogEntry = model('log', LogEntrySchema);
+const UserLogEntries = model('userLog', UserLogEntriesSchema);
+
+module.exports = { LogEntry, UserLogEntries };
