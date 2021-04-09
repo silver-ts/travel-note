@@ -13,6 +13,7 @@ const Settings = () => {
   const logoutHandler = () => {
     logoutUser();
     setUser(null);
+
     navigate('/login');
   };
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 import { checkRefreshToken } from '../api';
 
@@ -13,12 +14,19 @@ const useAuthProvider = () => {
   useEffect(() => {
     // Check if user exists
     const checkUser = async () => {
+      axios.defaults.headers.common['authorization'] = null;
+
       try {
         const res = await checkRefreshToken();
         setUser(res.data.user.accessToken && res.data.user);
 
+        // Add access Token to the request header
+        const accessToken = res.data.user.accessToken;
+        axios.defaults.headers.common['authorization'] = accessToken;
+
       } catch (err) {
         setUser(null);
+        axios.defaults.headers.common['authorization'] = null;
       }
 
       setLoading(false);
