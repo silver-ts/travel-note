@@ -3,14 +3,10 @@ const app = require('../app');
 const db = require('./db');
 const User = require('../models/User');
 
+const { USER_REQUEST } = require('./constants');
+
 // Pass supertest agent for each test
 const agent = request.agent(app);
-
-// A valid user input
-const USER_REQUEST = {
-  email: 'example@test.com',
-  password: 'password1234',
-};
 
 // Setup connection to the database
 beforeAll(async () => await db.connect());
