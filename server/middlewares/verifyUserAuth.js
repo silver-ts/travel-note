@@ -1,6 +1,6 @@
 const { verifyAccessToken } = require('../helpers/tokens');
 
-// Protect routes by verifying user token and checking db
+// Protect routes by verifying user access token
 const verifyUserAuth = async (req, res, next) => {
   const accessToken = req.headers['authorization'];
 
@@ -13,7 +13,7 @@ const verifyUserAuth = async (req, res, next) => {
     // Verify jwt token
     const { user } = await verifyAccessToken(accessToken);
 
-    // Save user to the locals
+    // Pass a user to the next middleware
     res.locals.user = user;
 
     next();

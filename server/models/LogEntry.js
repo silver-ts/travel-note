@@ -37,12 +37,15 @@ const LogEntrySchema = new Schema({
   timestamps: true,
 });
 
+// Personal data collection for each user
 const UserLogEntriesSchema = new Schema({
   _id: {
     type: Schema.Types.ObjectId,
     required: true,
   },
   logs: [ { type: Schema.Types.ObjectId, ref: 'log' } ],
+}, {
+  timestamps: true,
 });
 
 const LogEntry = model('log', LogEntrySchema);

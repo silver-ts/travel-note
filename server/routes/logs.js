@@ -6,8 +6,8 @@ const {
   logs_delete,
 } = require('../controllers/logs');
 
-const verifyUserAuth = require('../middlewares/verifyUserAuth');
 const router = Router();
+const verifyUserAuth = require('../middlewares/verifyUserAuth');
 
 router.post('/', verifyUserAuth, logs_post);
 router.get('/', verifyUserAuth, logs_get);

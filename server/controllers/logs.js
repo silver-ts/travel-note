@@ -1,4 +1,10 @@
-const { LogEntry, UserLogEntries } = require('../models/LogEntry');
+const {
+  findOrCreateLogCollection,
+  createLogEntry,
+  getUserLogEntries,
+  updateLogEntry,
+  removeLogEntry,
+} = require('../services/userLogs');
 
 // Create a new log entry
 const logs_post = async (req, res) => {
@@ -7,17 +13,16 @@ const logs_post = async (req, res) => {
 
   try {
     // Find or create a new documment for user log collection
-    const result = await UserLogEntries.findOneAndUpdate({ _id }, { expire: new Date() },  { upsert: true, new: true, setDefaultsOnInsert: true });
+    const collection = await findOrCreateLogCollection(_id);
 
     // Save a new log from the data provided
-    const lol = await new LogEntry(data);
-    await lol.save();
+    const logEntry = await createLogEntry(data);
 
     // Save user logs as array of id references
-    await result.logs.push(lol);
-    await result.save();
+    await collection.logs.push(logEntry);
+    await collection.save();
 
-    res.send(result);
+    res.send(collection);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -28,16 +33,9 @@ const logs_get = async (req, res) => {
   const _id = res.locals.user;
 
   try {
-    // Populate logs data in place of id reference
-    // Find or create a new documment for user log collection
-    const result = await UserLogEntries
-      .findOneAndUpdate({ _id }, { expire: new Date() },  {
-        upsert: true,
-        new: true,
-        setDefaultsOnInsert: true })
-      .populate('logs');
+    const collection = await getUserLogEntries(_id);
 
-    res.send(result.logs);
+    res.send(collection.logs);
   } catch (err) {
     res.send(err);
   }
@@ -48,9 +46,9 @@ const logs_put = async (req, res) => {
   const { id, data } = req.body;
 
   try {
-    const result = await LogEntry.findOneAndUpdate({ _id: id }, data, { upsert: true });
+    const entry = await updateLogEntry(id, data);
 
-    res.send(result);
+    res.send(entry);
   } catch (err) {
     res.send(err);
   }
@@ -62,16 +60,16 @@ const logs_delete = async (req, res) => {
   const _id = res.locals.user;
 
   try {
-    const result = await LogEntry.findByIdAndRemove({ _id: id });
+    // const result = await LogEntry.findByIdAndRemove({ _id: id });
+    await removeLogEntry(id);
 
     // Find or create a new documment for user log collection
-    const list = await UserLogEntries.findOneAndUpdate({ _id }, { expire: new Date() },  { upsert: true, new: true, setDefaultsOnInsert: true });
+    const collection = await findOrCreateLogCollection(_id);
 
-    list.logs.remove(id);
+    await collection.logs.remove(id);
+    await collection.save();
 
-    await list.save();
-
-    res.send(result);
+    res.send(collection);
   } catch (err) {
     res.send(err);
   }

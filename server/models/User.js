@@ -50,7 +50,6 @@ userSchema.static('login', async function(email, password) {
     throw new Error('Password is not correct');
   }
 
-  // Return only user id
   return user;
 });
 
