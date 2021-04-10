@@ -4,7 +4,7 @@ const {
   getUserLogEntries,
   updateLogEntry,
   removeLogEntry,
-} = require('../services/userLogs');
+} = require('../services');
 
 // Create a new log entry
 const logs_post = async (req, res) => {
@@ -54,18 +54,18 @@ const logs_put = async (req, res) => {
   }
 };
 
-// Remove log entry from db by id
+// Remove log entry from database by id
 const logs_delete = async (req, res) => {
   const { id } = req.body;
   const _id = res.locals.user;
 
   try {
-    // const result = await LogEntry.findByIdAndRemove({ _id: id });
     await removeLogEntry(id);
 
     // Find or create a new documment for user log collection
     const collection = await findOrCreateLogCollection(_id);
 
+    // Save changes to the collection that holds reference to the document
     await collection.logs.remove(id);
     await collection.save();
 

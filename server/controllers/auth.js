@@ -1,20 +1,19 @@
 const {
+  formatErrors,
   generateAccessToken,
   generateRefreshToken,
   sendAccessToken,
   sendRefreshToken,
   verifyRefreshToken,
-} = require('../helpers/tokens');
+} = require('../helpers');
 const {
   createUser,
   loginUser,
   updateRefreshToken,
   removeRefreshToken,
   getCurrentUser,
-} = require('../services/user');
-const formatErrors = require('../helpers/formatErrors');
+} = require('../services');
 
-// Sign up controllers
 const signup_post = async (req, res) => {
   const { email, password } = req.body;
 
@@ -38,12 +37,11 @@ const signup_post = async (req, res) => {
   }
 };
 
-// Login controllers
 const login_post = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Login user
+    // Get user with access token
     const user = await loginUser(email, password);
 
     // Generate tokens
@@ -69,10 +67,8 @@ const logout_delete = async (req, res) => {
     // Verify jwt refresh token
     const { user } = verifyRefreshToken(refreshToken);
 
-    // Remove refresh token from db
+    // Remove refresh token
     await removeRefreshToken(user);
-
-    // Delete current cookie
     await res.clearCookie('jwt');
 
     res.status(200).send({
@@ -86,9 +82,12 @@ const logout_delete = async (req, res) => {
 const refresh_post = async (req, res) => {
   const refreshToken = req.cookies.jwt;
 
-  // Check if we have a refresh token
+  // Check if there's a refresh token
   if (!refreshToken) {
-    return res.status(200).send({ message: 'No access', user: { accessToken: null } });
+    return res.status(200).send({
+      message: 'No access',
+      user: { accessToken: null },
+    });
   }
 
   try {
@@ -99,12 +98,18 @@ const refresh_post = async (req, res) => {
     const currentUser = await getCurrentUser(user);
 
     if (!currentUser) {
-      return res.status(200).send({ message: 'No access', user: { accessToken: null } });
+      return res.status(200).send({
+        message: 'No access',
+        user: { accessToken: null },
+      });
     }
 
     // If user exists, we should check refresh token stored with this user
     if (currentUser.refreshToken !== refreshToken) {
-      return res.status(200).send({ message: 'No access', user: { accessToken: null } });
+      return res.status(200).send({
+        message: 'No access',
+        user: { accessToken: null },
+      });
     }
 
     // If token exists, we'll update tokens

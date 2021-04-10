@@ -38,6 +38,7 @@ const LogEntrySchema = new Schema({
 });
 
 // Personal data collection for each user
+// We're holding reference to the logs id that're stored separately
 const UserLogEntriesSchema = new Schema({
   _id: {
     type: Schema.Types.ObjectId,
