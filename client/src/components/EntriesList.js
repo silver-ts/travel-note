@@ -51,6 +51,9 @@ const EntriesList = () => {
           sortingValues={SORT_VALUES.map(values => values.name)}
           currentValue={sorting} />
 
+        {!sortedLogEntries.length > 0
+            && <p className="mt-10 text-center">No log entries found. Try to add a new one on the map!</p>}
+
         <section className="grid auto-cols-fr sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-5 sm:mt-10 max-w-screen-2xl mx-auto">
           {sortedLogEntries && sortedLogEntries.map((log, i) => {
             const { title, location: { country }, visitDate, _id } = log;
