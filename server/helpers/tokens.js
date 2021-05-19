@@ -9,7 +9,9 @@ const {
 } = process.env;
 
 // For cookies convert minutes to milliseconds = m * 60s * 1000ms
-const JWT_REFRESH_TOKEN_EXPIRES_IN_MS = JWT_REFRESH_TOKEN_EXPIRES_IN * 60 * 1000;
+const CONVERT_M_TO_MS = 60 * 1000;
+const JWT_REFRESH_TOKEN_EXPIRES_IN_MS = JWT_REFRESH_TOKEN_EXPIRES_IN * CONVERT_M_TO_MS;
+const JWT_ACCESS_TOKEN_EXPIRES_IN_MS = JWT_ACCESS_TOKEN_EXPIRES_IN * CONVERT_M_TO_MS;
 
 /**
  * Create access token using JWT.
@@ -39,6 +41,7 @@ const sendAccessToken = (res, accessToken, payload) => {
   res.status(200).send({
     user: {
       accessToken,
+      expires: JWT_ACCESS_TOKEN_EXPIRES_IN_MS,
       ...payload,
     },
   });
