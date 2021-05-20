@@ -2,9 +2,45 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link, navigate, Redirect } from '@reach/router';
 import { Helmet } from 'react-helmet';
+import cntl from 'cntl';
 
 import { registerUser, loginUser } from '../api';
 import { BrandingIcon } from './icons';
+import { notifyFailure, notifySuccess } from './Notify';
+
+const authFormStyles = cntl`
+  flex
+  flex-col
+  justify-center
+  items-center
+  min-h-screen
+  bg-slate-400
+  sm:bg-transparent
+`;
+
+const logoStyles = cntl`
+  sm:absolute
+  top-1
+  sm:top-6
+  left-6
+`;
+
+const formBoxStyles = cntl`
+  sm:p-12
+  p-6
+  max-w-md
+  sm:max-w-lg
+  w-full
+  rounded-md
+  bg-slate-400
+`;
+
+const headerStyles = cntl`
+  font-light
+  text-slate-100
+  mb-3
+  uppercase
+`;
 
 const AuthForm = ({ path, user, setUser }) => {
   const isLogin = path === '/login';
@@ -17,6 +53,8 @@ const AuthForm = ({ path, user, setUser }) => {
     }
     : { email: '', password: '' });
   const [errorMessages, setErrorMessages] = useState(null);
+
+  const [onLoading, setOnLoading] = useState(false);
 
   if (user) {
     return <Redirect data-testid="auth-success" from="/login" to="/" noThrow />;
@@ -35,6 +73,10 @@ const AuthForm = ({ path, user, setUser }) => {
     e.preventDefault();
     const { email, password } = inputField;
 
+    // Clear errors before submitting
+    setErrorMessages(null);
+    setOnLoading(true);
+
     try {
       let response;
 
@@ -49,15 +91,20 @@ const AuthForm = ({ path, user, setUser }) => {
 
       if (response.data.user) {
         setUser(response.data.user);
+        setOnLoading(false);
+        notifySuccess('👋 Welcome back!');
         navigate('/');
 
       } else {
-        throw new Error('Something went wrong.');
+        throw new Error('Input data is not correct.');
       }
 
     } catch (err) {
+      notifyFailure('Authorization failed.');
       setErrorMessages(err.response.data.errors);
     }
+
+    setOnLoading(false);
   };
 
   return (
@@ -66,17 +113,15 @@ const AuthForm = ({ path, user, setUser }) => {
 
       <div
         data-testid="authForm"
-        className="flex flex-col justify-center items-center min-h-screen bg-slate-400 sm:bg-transparent"
+        className={authFormStyles}
       >
-        <div className="sm:absolute top-1 sm:top-6 left-6">
+        <div className={logoStyles}>
           <Link to="/">
             <BrandingIcon />
           </Link>
         </div>
-        <div className="sm:p-12 p-6 max-w-md sm:max-w-lg w-full rounded-md bg-slate-400">
-          <h1
-            className="font-light text-slate-100 mb-3 uppercase"
-          >
+        <div className={formBoxStyles}>
+          <h1 className={headerStyles}>
             {isLogin ? 'Login' : 'Sign up'}
           </h1>
           <p className="mb-12">
@@ -118,15 +163,24 @@ const AuthForm = ({ path, user, setUser }) => {
               required
               className="input mb-10">
             </input>
-            <button data-testid="submit" type="submit" className="btn mb-8">
+            <button
+              data-testid="submit"
+              type="submit"
+              className="btn mb-8"
+              disabled={onLoading}
+            >
               { isLogin ? 'Sign in' : 'Sign up'}
             </button>
           </form>
           <div className="text-base">
             <span>or{' '}</span>
             {isLogin
-              ? <Link to='/signup'>Create a new account</Link>
-              : <Link to='/login'>Log in to your existing account</Link>}
+              ? <Link to='/signup' className="underline">
+                Create a new account
+              </Link>
+              : <Link to='/login' className="underline">
+                Log in to your existing account
+              </Link>}
           </div>
         </div>
       </div>

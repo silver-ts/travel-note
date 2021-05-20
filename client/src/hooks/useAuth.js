@@ -13,11 +13,22 @@ const useAuthProvider = () => {
 
   // Send request to refresh JWT token after time in ms
   const refreshTokenOnExpire = expireTime => {
-    // If token expires in 10m, then send request after 5m
-    const refreshInterval = expireTime / 2;
+    // If token expires in 10m, then send request after 5m,
+    // interval can't be shorter than 2 min
+    const refreshInterval = expireTime / 2 < 100000 || 120000 ;
 
     return setInterval(() => checkRefreshToken(), refreshInterval);
   };
+
+  // Update headers each time user data changes,
+  // to be able to get logs after login / signin
+  useEffect(() => {
+    const accessToken = user?.accessToken;
+
+    if (accessToken) {
+      axios.defaults.headers.common['authorization'] = accessToken;
+    }
+  }, [user]);
 
   useEffect(() => {
     // Check if user exists
