@@ -7,6 +7,7 @@ import { default as LogoIcon } from './Logo';
 import { default as EditIcon } from './Edit';
 import { default as MarkerIcon } from './Marker';
 import { default as SortIcon } from './Sort';
+import { default as CloseIcon } from './Close';
 
 export {
   BrandingIcon,
@@ -18,4 +19,5 @@ export {
   EditIcon,
   MarkerIcon,
   SortIcon,
+  CloseIcon,
 };

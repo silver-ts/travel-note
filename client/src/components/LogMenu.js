@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import cntl from 'cntl';
+
 import {
   Menu,
   MenuItem,
@@ -8,12 +10,18 @@ import {
 import '@szhsin/react-menu/dist/index.css';
 import { EditIcon } from './icons';
 
+const buttonStyles = cntl`
+  bg-transparent
+  text-slate-100
+  hover:bg-slate-400
+`;
+
 const LogMenu = ({ editLogHandler, deleteLogHandler }) => (
   <div>
     <Menu
       className="bg-slate-400 text-slate-100"
       menuButton={
-        <MenuButton className="bg-transparent text-slate-100 hover:bg-slate-400">
+        <MenuButton className={buttonStyles}>
           <EditIcon />
         </MenuButton>
       }>

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Redirect } from '@reach/router';
 
 import { LogEntriesProvider } from '../hooks';
-import Navigation from './Navigation';
+import { Navigation } from '.';
 
 const Home = ({ children, user }) => {
   // Check if user is authenticated
@@ -16,7 +16,10 @@ const Home = ({ children, user }) => {
       <Navigation />
 
       <LogEntriesProvider>
-        <main data-testid="main" className="pl-0 sm:pl-20 w-full">
+        <main
+          data-testid="main"
+          className="pl-0 sm:pl-20 w-full relative"
+        >
           {children}
         </main>
       </LogEntriesProvider>

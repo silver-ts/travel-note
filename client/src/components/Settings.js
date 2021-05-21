@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet';
 import { logoutUser } from '../api';
 import { useAuth } from '../hooks';
 
-import Header from './Header';
+import { Header } from '.';
 
 const Settings = () => {
   const { setUser, user: { email } } = useAuth();

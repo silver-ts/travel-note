@@ -13,9 +13,9 @@ const useAuthProvider = () => {
 
   // Send request to refresh JWT token after time in ms
   const refreshTokenOnExpire = expireTime => {
-    // If token expires in 10m, then send request after 5m,
+    // If token expires in 10m, then send request after 9m,
     // interval can't be shorter than 2 min
-    const refreshInterval = expireTime / 2 < 100000 || 120000 ;
+    const refreshInterval = expireTime - 60000 < 100000 || 120000 ;
 
     return setInterval(() => checkRefreshToken(), refreshInterval);
   };

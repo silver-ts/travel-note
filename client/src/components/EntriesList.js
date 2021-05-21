@@ -1,15 +1,34 @@
 import React, { useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, navigate } from '@reach/router';
+import cntl from 'cntl';
 
 import { deleteLogEntry } from '../api';
 import { useLogEntries } from '../hooks';
-import Header from './Header';
 import { localeDate, SORT_VALUES, sortListBy } from '../utils';
-import { notifySuccess, notifyFailure } from './Notify';
 
-import LogMenu from './LogMenu';
-import SortBy from './SortBy';
+import { notifySuccess, notifyFailure } from './Notify';
+import { Header, LogMenu, SortBy } from '.';
+
+const sectionWrapperStyles = cntl`
+  grid
+  auto-cols-fr
+  sm:grid-cols-2
+  md:grid-cols-3
+  lg:grid-cols-4
+  gap-6 mt-5
+  sm:mt-10
+  max-w-screen-2xl
+  mx-auto
+`;
+
+const titleStyles = cntl`
+  text-white
+  bold
+  text-2xl
+  truncate
+  overflow-hidden
+`;
 
 const EntriesList = () => {
   // Get list of markers from database
@@ -52,9 +71,11 @@ const EntriesList = () => {
           currentValue={sorting} />
 
         {!sortedLogEntries.length > 0
-            && <p className="mt-10 text-center">No log entries found. Try to add a new one on the map!</p>}
+            && <p className="mt-10 text-center">
+              No log entries found. Try to add a new one on the map!
+            </p>}
 
-        <section className="grid auto-cols-fr sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-5 sm:mt-10 max-w-screen-2xl mx-auto">
+        <section className={sectionWrapperStyles}>
           {sortedLogEntries && sortedLogEntries.map((log, i) => {
             const { title, location: { country }, visitDate, _id } = log;
 
@@ -70,7 +91,7 @@ const EntriesList = () => {
                 <div className="mt-16 list-ornament">
                   <Link to={`/${_id}`}>
                     <p className="text-slate-200 text-base">{country}</p>
-                    <h3 className="text-white bold text-2xl truncate overflow-hidden">{title}</h3>
+                    <h3 className={titleStyles}>{title}</h3>
                   </Link>
                 </div>
               </article>

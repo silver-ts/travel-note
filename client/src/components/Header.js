@@ -1,5 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import cntl from 'cntl';
+
+const wrapperStyles = cntl`
+  text-2xl
+  font-bold
+  mb-4
+  text-slate-100
+  text-shadow
+`;
 
 const Header = ({ logEntries, title }) => {
   const count = logEntries && logEntries.length ? logEntries.length : '0';
@@ -7,14 +16,13 @@ const Header = ({ logEntries, title }) => {
   // Show custom title if defined
   if (title) {
     return  (
-      <div className="text-2xl font-bold mb-4 text-slate-100 text-shadow">{title}</div>
+      <div className={wrapperStyles}>{title}</div>
     );
   }
 
-  // Display main title and stats
   return (
     <>
-      <div className="text-2xl font-bold mb-4 text-slate-100 text-shadow">Journey Log</div>
+      <div className={wrapperStyles}>Journey Log</div>
       <p className="text-base text-slate-200 mb-2">
           Collection of{' '}
         <span data-testid="number" className="text-slate-100">

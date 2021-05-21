@@ -14,9 +14,7 @@ import { useLogEntries } from '../hooks';
 import s from '../settings';
 
 import { MarkerIcon } from './icons';
-import LogEntry from './LogEntry';
-import MarkerPopup from './MarkerPopup';
-import Header from './Header';
+import { LogEntry, MarkerPopup, Header, NotFound } from '.';
 
 // Map using Mapbox Dark theme:
 // https://docs.mapbox.com/help/tutorials/use-mapbox-gl-js-with-react/
@@ -24,7 +22,7 @@ import Header from './Header';
 const Map = ({ location }) => {
   const { id } = useParams();
   const isLogID = id !== 'map';
-  const isEdit = location.state.isEdit;
+  const isEdit = location.state?.isEdit || false;
 
   // Get list of markers from database
   const { logEntries } = useLogEntries();
@@ -126,12 +124,19 @@ const Map = ({ location }) => {
   // Log entry that matches current id in the useParams
   const currentEntryLog = logEntries.filter(entry => entry._id === id)[0];
 
+  if (isLogID && !currentEntryLog) {
+    return <NotFound />;
+  }
+
   return (
     <>
       <Helmet title={currentEntryLog ? currentEntryLog.title : 'Home'} />
 
       {/* Header */}
-      <div data-testid="header" className="absolute z-20 sm:top-10 sm:left-32 top-3 left-3">
+      <div
+        data-testid="header"
+        className="absolute z-20 sm:top-10 sm:left-32 top-3 left-3"
+      >
         <Header logEntries={logEntries} />
       </div>
 

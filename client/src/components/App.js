@@ -38,6 +38,7 @@ const App = () => {
             <Settings path="/settings" />
             <EntriesList path="/logs" />
             <Map path="/:id" />
+            <NotFound default />
           </Home>
 
         </Router>

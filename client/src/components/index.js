@@ -12,6 +12,7 @@ import MarkerPopup from './MarkerPopup';
 import EntriesList from './EntriesList';
 import Header from './Header';
 import LogMenu from './LogMenu';
+import SortBy from './SortBy';
 
 import { notifySuccess, notifyFailure } from './Notify';
 import App from './App';
@@ -33,5 +34,6 @@ export {
   EntriesList,
   Header,
   LogMenu,
+  SortBy,
   App,
 };

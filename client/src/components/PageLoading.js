@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { useAuth } from '../hooks';
-import Loading from './Loading';
+import { Loading } from '.';
 
 const PageLoading = ({ children }) => {
   const { loading } = useAuth();

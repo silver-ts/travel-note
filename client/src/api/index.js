@@ -1,4 +1,9 @@
-import { registerUser, loginUser, logoutUser, checkRefreshToken } from './user';
+import {
+  registerUser,
+  loginUser,
+  logoutUser,
+  checkRefreshToken,
+} from './user';
 import {
   getLogEntriesList,
   createLogEntry,

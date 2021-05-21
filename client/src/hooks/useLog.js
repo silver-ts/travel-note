@@ -14,7 +14,7 @@ const useLogs = () => {
       const result = await getLogEntriesList();
       await setLogEntries(result.data);
     } catch (err) {
-      console.log(err);
+      console.warn(err);
     }
   };
 

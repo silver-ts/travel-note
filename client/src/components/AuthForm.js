@@ -92,7 +92,7 @@ const AuthForm = ({ path, user, setUser }) => {
       if (response.data.user) {
         setUser(response.data.user);
         setOnLoading(false);
-        notifySuccess('👋 Welcome back!');
+        notifySuccess('Welcome back!');
         navigate('/');
 
       } else {

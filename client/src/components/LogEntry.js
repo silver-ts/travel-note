@@ -1,14 +1,49 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { navigate } from '@reach/router';
+import cntl from 'cntl';
 
 import { createLogEntry, updateLogEntry, deleteLogEntry } from '../api';
-import { useLogEntries, useAuth } from '../hooks';
+import { useLogEntries, useAuth, useKeypress } from '../hooks';
 import { localeDate, formattedDate } from '../utils';
 import s from '../settings';
 
+import { CloseIcon } from './icons';
 import { notifySuccess, notifyFailure } from './Notify';
-import LogMenu from './LogMenu';
+import { LogMenu } from '.';
+
+const sectionWrapperStyles = cntl`
+  w-full
+  absolute
+  top-0
+  sm:right-0
+  h-screen
+  left-auto
+  bottom-auto
+  bg-slate-400
+  px-6
+  sm:px-12
+  pt-20
+  sm:pt-32
+  pb-12
+  sm:w-101
+  overflow-x-hidden
+  z-40
+  overflow-y-auto
+  slide
+`;
+
+const closeBtnStyles = cntl`
+  absolute
+  top-6
+  left-6
+  sm:left-12
+  flex
+  items-center
+  hover:text-white
+  text-slate-300
+  transition-all
+`;
 
 const LogEntry = ({
   isCreate,
@@ -134,9 +169,15 @@ const LogEntry = ({
     });
   };
 
+  // Close window on ESC
+  useKeypress('Escape', () => {
+    cancelFormHandler();
+    navigate('/map');
+  });
+
   if (edit) {
     return (
-      <section className="w-full absolute top-0 sm:right-0 h-screen left-auto bottom-auto bg-slate-400 px-3 sm:px-12 pt-10 sm:pt-32 pb-12 sm:w-101 overflow-x-hidden z-40 overflow-y-auto">
+      <section className={sectionWrapperStyles}>
         <div className="circle"></div>
 
         <form className="flex flex-col" onSubmit={submitLogHandler}>
@@ -149,7 +190,9 @@ const LogEntry = ({
             required
             value={inputField.title}
             onChange={onChangeInputHandler} />
-          <p className="text-right text-base">{`${charCount.title}/${s.TITLE_CHAR_LIMIT}`}</p>
+          <p className="text-right text-base">
+            {`${charCount.title}/${s.TITLE_CHAR_LIMIT}`}
+          </p>
 
           <label htmlFor="visitDate" className="mb-3">Visit date</label>
           <input
@@ -169,7 +212,9 @@ const LogEntry = ({
             maxLength={s.CONTENT_CHAR_LIMIT}
             value={inputField.content}
             onChange={onChangeInputHandler} />
-          <p className="text-right text-base">{`${charCount.content}/${s.CONTENT_CHAR_LIMIT}`}</p>
+          <p className="text-right text-base">
+            {`${charCount.content}/${s.CONTENT_CHAR_LIMIT}`}
+          </p>
 
           <div className="flex items-center mb-12">
             <button className="btn my-3">Submit</button>
@@ -181,11 +226,22 @@ const LogEntry = ({
   }
 
   return (
-    <section className="w-full absolute top-0 sm:right-0 h-screen left-auto bottom-auto bg-slate-400 px-3 sm:px-12 pt-10 sm:pt-32 pb-12 sm:w-101 overflow-x-hidden z-40 overflow-y-auto">
+    <section className={sectionWrapperStyles}>
+      <button
+        className={closeBtnStyles}
+        onClick={() => navigate('/map')}
+      >
+        <CloseIcon />
+        <p className="ml-2 text-base font-bold">Close - ESC</p>
+      </button>
+
       <div className="circle"></div>
+
       <div className="divide-y divide-slate-300">
         <header className="flex justify-between items-center pb-5 text-4xl">
-          <h2 className="text-slate-100 break-words overflow-hidden">{data && data.title}</h2>
+          <h2 className="text-slate-100 break-words overflow-hidden">
+            {data && data.title}
+          </h2>
           <LogMenu
             deleteLogHandler={deleteLogHandler}
             editLogHandler={editLogHandler} />
