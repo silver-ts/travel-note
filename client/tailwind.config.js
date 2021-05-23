@@ -14,6 +14,7 @@ module.exports = {
           400: '#292930',
         },
         salmon: '#FA8072',
+        dimSalmon: '#C9665B',
       },
       fontFamily: {
         primary: ['Quicksand'],

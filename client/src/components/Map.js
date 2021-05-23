@@ -143,7 +143,7 @@ const Map = ({ location }) => {
       {/* Map */}
       <ReactMapGL
         {...viewport}
-        width="100vw"
+        width="100%"
         height="100vh"
         mapStyle="mapbox://styles/mapbox/dark-v10"
         mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
@@ -157,7 +157,13 @@ const Map = ({ location }) => {
             latitude={addEntryCoordinates.coordinates[1]}
             longitude={addEntryCoordinates.coordinates[0]}
             className="text-salmon">
-            <MarkerIcon />
+            <div
+              style={{
+                transform:
+                  `translate(${-s.MARKER_SIZE / 2}px,${-s.MARKER_SIZE}px)`,
+              }}>
+              <MarkerIcon />
+            </div>
           </Marker>
         ) : null }
       </ReactMapGL>

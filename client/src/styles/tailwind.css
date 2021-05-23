@@ -23,6 +23,15 @@
   main {
     @apply overflow-hidden;
   }
+
+  button {
+    @apply focus:outline-none outline-none;
+  }
+
+  input,
+  textarea {
+    @apply focus:outline-none focus:ring ring-black;
+  }
 }
 
 @layer components {
@@ -42,7 +51,7 @@
 
   /* Submit button */
   .btn {
-    @apply bg-salmon w-max py-1 px-6 rounded-full text-slate-400 text-xl font-medium uppercase;
+    @apply bg-salmon w-max py-1 px-6 rounded-full text-slate-400 text-xl font-medium uppercase  hover:bg-dimSalmon transition-all;
   }
 
   /* Loader */
@@ -121,6 +130,7 @@
 
   .marker {
     @apply hover:text-salmon cursor-pointer transition-all;
+    transform: translateY(100%);
   }
 
   .list-ornament {
@@ -139,5 +149,21 @@
   /* Read more: https://github.com/visgl/react-map-gl/issues/604#issuecomment-439673570 */
   .mapboxgl-canvas {
     left: 0;
+  }
+
+  /* Sidebar slide animation */
+  .slide {
+    @apply transition-all;
+    animation: slide 0.5s forwards;
+  }
+
+  @keyframes slide {
+    0% {
+      transform: translateX(100%);
+    }
+
+    100% {
+      transform: translateX(0%);
+    }
   }
 }
