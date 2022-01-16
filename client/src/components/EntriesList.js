@@ -31,7 +31,7 @@ const titleStyles = cntl`
 `;
 
 const EntriesList = () => {
-  // Get list of markers from database
+  // Get list of markers from the database
   const { logEntries, getEntries } = useLogEntries();
 
   // Find default sorting option
@@ -42,7 +42,7 @@ const EntriesList = () => {
     sortListBy(logEntries, sorting)),
   [logEntries, sorting]);
 
-  // Open current log page details in sidebar
+  // Open current log page details in the sidebar
   const editLogHandler = id => {
     navigate(`/${id}`, { state: { isEdit: true } });
   };
@@ -71,9 +71,11 @@ const EntriesList = () => {
           currentValue={sorting} />
 
         {!sortedLogEntries.length > 0
-            && <p className="mt-10 text-center">
+            && (
+              <p className="mt-10 text-center">
               No log entries found. Try to add a new one on the map!
-            </p>}
+              </p>
+            )}
 
         <section className={sectionWrapperStyles}>
           {sortedLogEntries && sortedLogEntries.map((log, i) => {

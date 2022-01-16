@@ -73,7 +73,6 @@ const AuthForm = ({ path, user, setUser }) => {
     e.preventDefault();
     const { email, password } = inputField;
 
-    // Clear errors before submitting
     setErrorMessages(null);
     setOnLoading(true);
 
@@ -81,11 +80,9 @@ const AuthForm = ({ path, user, setUser }) => {
       let response;
 
       if (isLogin) {
-        // Receive user and save it to the local context
         response = await loginUser(email, password);
 
       } else {
-        // Receive user and save it to the local context
         response = await registerUser(email, password);
       }
 

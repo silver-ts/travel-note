@@ -55,8 +55,8 @@ const LogEntry = ({
   const { user } = useAuth();
   const { getEntries } = useLogEntries();
 
-  // Show edit form when new marker created or clicking menu edit button
-  // from the logs page
+  // Show edit form when a new marker created or when clicking menu edit
+  // button from the logs page
   const [edit, setEdit] = useState(isCreate || isEdit);
 
   // Setup inputs and error messages
@@ -88,7 +88,7 @@ const LogEntry = ({
     e.preventDefault();
 
     if (isCreate) {
-    // Save entry to the database
+      // Save entry to the database
       try {
         await createLogEntry({
           title: inputField.title,
@@ -189,7 +189,8 @@ const LogEntry = ({
             maxLength={s.TITLE_CHAR_LIMIT}
             required
             value={inputField.title}
-            onChange={onChangeInputHandler} />
+            onChange={onChangeInputHandler}
+          />
           <p className="text-right text-base">
             {`${charCount.title}/${s.TITLE_CHAR_LIMIT}`}
           </p>
@@ -201,7 +202,8 @@ const LogEntry = ({
             className="input mb-8"
             required
             value={inputField.visitDate}
-            onChange={onChangeInputHandler} />
+            onChange={onChangeInputHandler}
+          />
 
           <label htmlFor="content" className="mb-3">Content</label>
           <textarea
@@ -211,7 +213,8 @@ const LogEntry = ({
             required
             maxLength={s.CONTENT_CHAR_LIMIT}
             value={inputField.content}
-            onChange={onChangeInputHandler} />
+            onChange={onChangeInputHandler}
+          />
           <p className="text-right text-base">
             {`${charCount.content}/${s.CONTENT_CHAR_LIMIT}`}
           </p>
@@ -244,7 +247,8 @@ const LogEntry = ({
           </h2>
           <LogMenu
             deleteLogHandler={deleteLogHandler}
-            editLogHandler={editLogHandler} />
+            editLogHandler={editLogHandler}
+          />
         </header>
         <div>
           <p className="pt-5 mb-10 text-slate-200 whitespace-pre-line">

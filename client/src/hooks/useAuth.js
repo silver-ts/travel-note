@@ -15,12 +15,12 @@ const useAuthProvider = () => {
   const refreshTokenOnExpire = expireTime => {
     // If token expires in 10m, then send request after 9m,
     // interval can't be shorter than 2 min
-    const refreshInterval = expireTime - 60000 < 100000 || 120000 ;
+    const refreshInterval = ((expireTime - 60000) < 100000) || 120000 ;
 
     return setInterval(() => checkRefreshToken(), refreshInterval);
   };
 
-  // Update headers each time user data changes,
+  // Update headers each time user data changes
   // to be able to get logs after login / signin
   useEffect(() => {
     const accessToken = user?.accessToken;
@@ -56,7 +56,6 @@ const useAuthProvider = () => {
       setLoading(false);
     };
 
-    // Call async function inside useEffect
     checkUser();
   }, []);
 

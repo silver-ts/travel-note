@@ -6,9 +6,9 @@ import { LogEntriesProvider } from '../hooks';
 import { Navigation } from '.';
 
 const Home = ({ children, user }) => {
-  // Check if user is authenticated
+  // Check user authentication
   if (!user) {
-    return <Redirect from="" to="/login" noThrow  />;
+    return <Redirect from="" to="/login" noThrow />;
   }
 
   return (

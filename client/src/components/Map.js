@@ -24,10 +24,9 @@ const Map = ({ location }) => {
   const isLogID = id !== 'map';
   const isEdit = location.state?.isEdit || false;
 
-  // Get list of markers from database
+  // Get list of markers from the database
   const { logEntries } = useLogEntries();
 
-  // const [isCreate, setCreate] = useState(false);
   const [addEntryCoordinates, setAddEntryCoordinates] = useState(null);
   const [showPopup, setShowPopup] = useState(null);
 
@@ -50,7 +49,8 @@ const Map = ({ location }) => {
         <Marker
           latitude={latitude}
           longitude={longitude}
-          className="z-20">
+          className="z-20"
+        >
           <button
             style={{
               transform:
@@ -61,21 +61,24 @@ const Map = ({ location }) => {
           </button>
         </Marker>
 
-        {showPopup === id && <Popup
-          latitude={latitude}
-          longitude={longitude}
-          closeButton={true}
-          closeOnClick={false}
-          onClose={() => setShowPopup(null)}
-          anchor="top"
-          className="z-40" >
-          <MarkerPopup
-            title={marker.title}
-            visitDate={marker.visitDate}
-            country={marker.location.country}
-            clicked={() => navigate(`/${id}`)}
-          />
-        </Popup>}
+        {showPopup === id && (
+          <Popup
+            latitude={latitude}
+            longitude={longitude}
+            closeButton={true}
+            closeOnClick={false}
+            onClose={() => setShowPopup(null)}
+            anchor="top"
+            className="z-40"
+          >
+            <MarkerPopup
+              title={marker.title}
+              visitDate={marker.visitDate}
+              country={marker.location.country}
+              clicked={() => navigate(`/${id}`)}
+            />
+          </Popup>
+        )}
       </React.Fragment>
     );
   }), [logEntries, showPopup]);

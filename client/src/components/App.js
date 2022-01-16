@@ -47,7 +47,6 @@ const App = () => {
       {/* Popup notifications */}
       <Toaster />
     </>
-
   );
 };
 export default App;

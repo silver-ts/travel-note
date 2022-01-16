@@ -17,6 +17,13 @@ const buttonStyles = cntl`
   hover:bg-slate-400
 `;
 
+const menuItemStyles = cntl`
+  bg-slate-400
+  text-slate-100
+  hover:bg-slate-300
+  rounded-md
+`;
+
 const SortBy = ({ sortingValues, currentValue, onSortChangeHandler }) => (
   <div className="sm:absolute right-12 top-20">
     <Menu
@@ -30,13 +37,16 @@ const SortBy = ({ sortingValues, currentValue, onSortChangeHandler }) => (
         </MenuButton>
       }>
       <MenuRadioGroup value={currentValue}>
-        {sortingValues.map((name, i) => <MenuItem
-          key={i}
-          className="bg-slate-400 text-slate-100 hover:bg-slate-300 rounded-md"
-          value={name}
-          onClick={() => onSortChangeHandler(name)}>
-          {name}
-        </MenuItem>)}
+        {sortingValues.map((name, i) => (
+          <MenuItem
+            key={i}
+            className={menuItemStyles}
+            value={name}
+            onClick={() => onSortChangeHandler(name)}
+          >
+            {name}
+          </MenuItem>
+        ))}
       </MenuRadioGroup>
     </Menu>
   </div>

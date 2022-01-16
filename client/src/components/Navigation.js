@@ -41,11 +41,11 @@ const Navigation = () => (
       <LogoIcon />
     </Link>
     <ul className="flex sm:flex-col justify-center items-center">
-      <NavLink to="/map" className="nav-link"><MapIcon /></NavLink>
-      <NavLink to="/logs" className="nav-link">
+      <NavLink to="/map" className="nav-link" title="Map"><MapIcon /></NavLink>
+      <NavLink to="/logs" className="nav-link" title="Log Entries">
         <MenuIcon />
       </NavLink>
-      <NavLink to="/settings" className="nav-link">
+      <NavLink to="/settings" className="nav-link" title="Settings">
         <SettingsIcon />
       </NavLink>
     </ul>

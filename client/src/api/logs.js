@@ -37,7 +37,6 @@ export const getEntryLocation = async (longitude, latitude) => {
     return location;
   }, {});
 
-  // Check if object is empty
   if (Object.keys(data).length === 0) {
     return null;
   }
@@ -46,7 +45,7 @@ export const getEntryLocation = async (longitude, latitude) => {
 };
 
 /**
- * Update a log entry by id
+ * Update log entry by id
  * @param {string} id - log id
  * @param {object} data - { title, content, visitDate }
  */
