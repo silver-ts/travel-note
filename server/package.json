@@ -49,6 +49,7 @@
     "mongoose": "^5.11.16",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.7",
+    "rate-limit-mongo": "^2.3.2",
     "validator": "^13.5.2"
   },
   "devDependencies": {
