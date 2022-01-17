@@ -1,0 +1,7 @@
+## Read more: https://stackoverflow.com/questions/58065603/netlify-renders-404-on-page-refresh-using-react-and-react-router
+## Read more: https://docs.netlify.com/routing/redirects/
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

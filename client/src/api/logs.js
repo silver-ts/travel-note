@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+axios.defaults.baseURL = process.env.REACT_APP_SERVER_URL;
+
 /**
  * Get all log entries from the database
  */
