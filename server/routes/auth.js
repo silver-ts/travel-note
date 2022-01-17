@@ -6,10 +6,12 @@ const {
   refresh_post,
 } = require('../controllers/auth');
 
+const limiter = require('../middlewares/limiter');
+
 const router = Router();
 
-router.post('/signup', signup_post);
-router.post('/login', login_post);
+router.post('/signup', limiter, signup_post);
+router.post('/login', limiter, login_post);
 router.delete('/logout', logout_delete);
 router.post('/refresh-token', refresh_post);
 

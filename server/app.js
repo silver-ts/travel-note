@@ -13,6 +13,8 @@ const { MONGO_DB_CONNECT, CORS_ORIGIN } = process.env;
 
 const app = express();
 
+app.enable('trust proxy');
+
 // Set up mongoose connection
 if (process.env.NODE_ENV !== 'test') {
   mongoose.connect(MONGO_DB_CONNECT, {
@@ -26,7 +28,7 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan('dev'));
-// Configures the Access-Control-Allow-Origin CORS header
+// Configure the Access-Control-Allow-Origin CORS header
 app.use(cors({ origin: CORS_ORIGIN, credentials: true }));
 
 // Route middlewares
