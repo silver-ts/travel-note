@@ -13,7 +13,9 @@ const { MONGO_DB_CONNECT, CORS_ORIGIN } = process.env;
 
 const app = express();
 
-app.enable('trust proxy');
+// To solve Heroku error
+// Read more: https://www.npmjs.com/package/express-rate-limit#usage
+app.enable('trust proxy', 1);
 
 // Set up mongoose connection
 if (process.env.NODE_ENV !== 'test') {
