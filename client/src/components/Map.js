@@ -7,6 +7,8 @@ import ReactMapGL, {
   WebMercatorViewport,
   Popup,
 } from 'react-map-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import mapboxgl from 'mapbox-gl';
 import { Helmet } from 'react-helmet';
 
 import { getEntryLocation } from '../api';
@@ -15,6 +17,13 @@ import s from '../settings';
 
 import { MarkerIcon } from './icons';
 import { LogEntry, MarkerPopup, Header, NotFound } from '.';
+
+// Mapbox produces an error - "Uncaught ReferenceError: y is not defined".
+// This is an issue of Webpack.
+// Read more: https://stackoverflow.com/questions/65802002/mapbox-production-error-in-console-uncaught-referenceerror-y-is-not-defined
+mapboxgl.workerClass = require(
+  'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker',
+).default;
 
 // Map using Mapbox Dark theme:
 // https://docs.mapbox.com/help/tutorials/use-mapbox-gl-js-with-react/
