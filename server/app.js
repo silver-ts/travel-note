@@ -1,12 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
+const cors = require('cors');
 const authRouter = require('./routes/auth');
 const { verifyUserAuth } = require('./middleware/auth');
 
 // Require variables from .env file
 require('dotenv').config();
-const { MONGO_DB_CONNECT } = process.env;
+const { MONGO_DB_CONNECT, CORS_ORIGIN } = process.env;
 
 const app = express();
 
@@ -21,8 +23,12 @@ if (process.env.NODE_ENV !== 'test') {
 // Middlewares
 app.use(express.json());
 app.use(cookieParser());
+app.use(morgan('dev'));
+// Configures the Access-Control-Allow-Origin CORS header
+app.use(cors({ origin: CORS_ORIGIN }));
 
 // Route middlewares
+app.get('/api/test', (req, res) => res.status(200).send({ username: 'Flavio' }));
 app.use('/user', authRouter);
 app.use('/', verifyUserAuth, (req, res) => res.send('main page'));
 

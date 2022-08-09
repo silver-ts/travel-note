@@ -1,10 +1,16 @@
 {
   "name": "travel-note-server",
   "version": "0.1.0",
+  "private": true,
   "description": "Express server for travel note",
-  "keywords": [],
+  "keywords": [
+    "express.js",
+    "jest",
+    "mongoose",
+    "journey-log"
+  ],
   "license": "MIT",
-  "main": "src/index.js",
+  "main": "app.js",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -32,15 +38,19 @@
     ]
   },
   "dependencies": {
+    "@ryuuto829/eslint-config-with-prettier": "^0.3.0",
     "bcrypt": "^5.0.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.16",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.7",
     "validator": "^13.5.2"
   },
   "devDependencies": {
-    "@ryuuto829/eslint-config-with-prettier": "^0.2.0",
     "babel-eslint": "^10.1.0",
     "eslint": "^7.18.0",
     "eslint-config-prettier": "^7.1.0",
