@@ -22,7 +22,7 @@ const Header = ({ logEntries, title }) => {
 
   return (
     <>
-      <div className={wrapperStyles}>Journey Log</div>
+      <div className={wrapperStyles}>Travel Note</div>
       <p className="text-base text-slate-200 mb-2">
           Collection of{' '}
         <span data-testid="number" className="text-slate-100">

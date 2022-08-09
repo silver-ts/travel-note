@@ -21,7 +21,7 @@ const App = () => {
 
   return (
     <>
-      <Helmet titleTemplate="%s | Journey Log" defaultTitle="Journey Log" />
+      <Helmet titleTemplate="%s | Travel Note" defaultTitle="Travel Note" />
 
       <PageLoading>
         <Router>

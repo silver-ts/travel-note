@@ -7,7 +7,7 @@
     "express.js",
     "jest",
     "mongoose",
-    "journey-log"
+    "travel-note"
   ],
   "license": "MIT",
   "main": "app.js",

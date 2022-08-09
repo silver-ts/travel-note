@@ -8,6 +8,6 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "https://journey-log-server.herokuapp.com/"
+  to = "https://travel-note-server.herokuapp.com/"
   status = 200
   force = true

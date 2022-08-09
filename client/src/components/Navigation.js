@@ -50,7 +50,7 @@ const Navigation = () => (
       </NavLink>
     </ul>
     <a
-      href="https://github.com/ryuuto829/journey-log"
+      href="https://github.com/silver-ts/travel-note"
       target="_blank"
       rel="noreferrer noopener "
       className="hover:text-white transition-all hidden sm:block">
