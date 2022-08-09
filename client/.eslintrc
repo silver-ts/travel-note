@@ -1,16 +1,10 @@
 {
-  "extends": [
-    "@ryuuto829/eslint-config-with-prettier/react",
-    "plugin:react-app/recommended",
-    "plugin:testing-library/react"
-  ],
+  "extends": ["@ryuuto829/eslint-config-with-prettier/react", "prettier/react"],
   "env": {
     "browser": true,
     "node": true
   },
   "rules": {
-    "no-unused-vars": "warn",
-    "react/prop-types": "warn",
-    "no-console": "warn"
+    "max-len": ["error", { "code": 80, "tabWidth": 2 }]
   }
 }
